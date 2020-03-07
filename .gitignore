@@ -1,0 +1,17 @@
+
+# Don't track content of these folders
+
+# code-editor
+.vscode
+
+# Binary python files
+*.py[c|o|d]
+
+# database
+db.sqlite3
+
+# assets
+assets/**
+
+# media files
+media/**
