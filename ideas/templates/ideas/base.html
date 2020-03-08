@@ -5,37 +5,103 @@
 
 <head {% meta_namespaces %}>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"> {% include 'meta/meta.html' %}
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible"
+        content="ie=edge"> {% include 'meta/meta.html' %}
     <link rel="canonical" href="{{request.build_absolute_uri}}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Rubik|Lato&display=swap">
-    <link rel="stylesheet" type="text/css" href="{% static 'ideas/style.css' %}">
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
-    <link rel="icon" sizes="16x16 32x32 64x64" href="{% static 'favicon.ico' %}">
-    <link rel="icon" type="image/png" sizes="196x196" href="{% static " favicon-192.png " %}">
-    <link rel="icon" type="image/png" sizes="160x160" href="{% static " favicon-160.png " %}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{% static " favicon-96.png " %}">
-    <link rel="icon" type="image/png" sizes="64x64" href="{% static " favicon-64.png " %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static " favicon-32.png " %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static " favicon-16.png " %}">
-    <link rel="apple-touch-icon" href="{% static " favicon-57.png " %}">
-    <link rel="apple-touch-icon" sizes="114x114" href="{% static " favicon-114.png " %}">
-    <link rel="apple-touch-icon" sizes="72x72" href="{% static " favicon-72.png " %}">
-    <link rel="apple-touch-icon" sizes="144x144" href="{% static " favicon-144.png " %}">
-    <link rel="apple-touch-icon" sizes="60x60" href="{% static " favicon-60.png " %}">
-    <link rel="apple-touch-icon" sizes="120x120" href="{% static " favicon-120.png " %}">
-    <link rel="apple-touch-icon" sizes="76x76" href="{% static " favicon-76.png " %}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{% static " favicon-152.png " %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static " favicon-180.png " %}">
-    <meta name="msapplication-TileColor" content="#FFFFFF">
-    <meta name="msapplication-TileImage" content={% static "favicon-144.png" %}>
-    <meta name="msapplication-config" content={% static "browserconfig.xml" %}>
+    <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto|Rubik|Lato&display=swap">
+    <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'ideas/style.css' %}">
+    <link rel="shortcut icon"
+        href="{% static 'favicon.ico' %}">
+    <link rel="icon"
+        sizes="16x16 32x32 64x64"
+        href="{% static 'favicon.ico' %}">
+    <link rel="icon"
+        type="image/png"
+        sizes="196x196"
+        href="{% static " favicon-192.png " %}">
+    <link rel="icon"
+        type="image/png"
+        sizes="160x160"
+        href="{% static " favicon-160.png " %}">
+    <link rel="icon"
+        type="image/png"
+        sizes="96x96"
+        href="{% static " favicon-96.png " %}">
+    <link rel="icon"
+        type="image/png"
+        sizes="64x64"
+        href="{% static " favicon-64.png " %}">
+    <link rel="icon"
+        type="image/png"
+        sizes="32x32" href="{% static " favicon-32.png " %}">
+    <link rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="{% static " favicon-16.png " %}">
+    <link rel="apple-touch-icon"
+        href="{% static " favicon-57.png " %}">
+    <link rel="apple-touch-icon"
+        sizes="114x114"
+        href="{% static " favicon-114.png " %}">
+    <link rel="apple-touch-icon"
+        sizes="72x72"
+        href="{% static " favicon-72.png " %}">
+    <link rel="apple-touch-icon"
+        sizes="144x144"
+        href="{% static " favicon-144.png " %}">
+    <link 
+        rel="apple-touch-icon" 
+        sizes="120x120" 
+        href="{% static " favicon-120.png " %}">
+    <link 
+        rel="apple-touch-icon" 
+        sizes="60x60" 
+        href="{% static " favicon-60.png " %}">
+    <link 
+        rel="apple-touch-icon" 
+        sizes="76x76" 
+        href="{% static " favicon-76.png " %}">
+    <link 
+        rel="apple-touch-icon" 
+        sizes="152x152" 
+        href="{% static " favicon-152.png " %}">
+    <link 
+        rel="apple-touch-icon" 
+        sizes="180x180" 
+        href="{% static " favicon-180.png " %}">
+    <meta 
+        name="msapplication-TileColor" 
+        content="#FFFFFF">
+    <meta 
+        name="msapplication-TileImage" 
+        content={% static "favicon-144.png" %}>
+    <meta 
+        name="msapplication-config" 
+        content={% static "browserconfig.xml" %}>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script 
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
     {% block extrahead %} {% endblock extrahead %}
 </head>
 
@@ -43,8 +109,15 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark navbar-color fixed-top">
             <div class="container-fluid">
-                <a class="navbar-brand mr-4" href="{% url 'ideas:home' %}" title="IdeaFare"><svg id="brand"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 15" width="35" height="35" style="">
+                <a class="navbar-brand mr-4"
+                    href="{% url 'ideas:home' %}" 
+                    title="IdeaFare">
+                        <svg id="brand"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 10 15"
+                            width="35"
+                            height="35"
+                            style="">
                         <defs>
                             <style>
                                 .cls-1,
@@ -68,7 +141,13 @@
                         <line class="cls-2" x1="2" y1="4" x2="8" y2="4"></line>
                         <line class="cls-2" x1="2" y1="10" x2="8" y2="10"></line>
                     </svg></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarToggle"
+                    aria-controls="navbarToggle"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
@@ -78,7 +157,9 @@
                         {% if user.is_authenticated %}
                         <div id="dropdown" class="dropdown">
                             {% comment %} <button class="dropbtn">{{user.first_name}}</button> {% endcomment %}
-                            <a href="#" class="ml-3" title="Profile Options" data-toggle="dropdown"></a>
+                            <a href="#" class="ml-3"
+                                title="Profile Options"
+                                data-toggle="dropdown"></a>
                             {% comment %} <i class="fa fa-caret-down"></i> {% endcomment %}
                             <div class="dropdown-menu">
                                 <p class="ml-1 mb-0">Signed in as <strong>{{user.username}}</strong>
@@ -90,8 +171,12 @@
                             </div>
                         </div>
                         {% else %}
-                        <a class="nav-item nav-link" href="{% url 'login' %}" title="Login">Login</a>
-                        <a class="nav-item nav-link" href="{% url 'register' %}" title="Register">Register</a>
+                        <a class="nav-item nav-link" 
+                        href="{% url 'login' %}" 
+                        title="Login">Login</a>
+                        <a class="nav-item nav-link" 
+                        href="{% url 'register' %}" 
+                        title="Register">Register</a>
                         {% endif %}
                     </div>
                 </div>

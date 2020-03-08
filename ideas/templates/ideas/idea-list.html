@@ -1,0 +1,34 @@
+{% load cool_timesince %}
+<div class="idea-list">
+    {% for idea in ideas %}
+    <div class="container-fluid">
+        <div class="row media content-section idea-list">
+            <div class="details col-md-9">
+                <div class="media-body idea-contents">
+                    <div class="idea-details">
+                        <h2>
+                            <a class="idea-title"
+                                href="{{ idea.get_absolute_url }}"
+                                title="{{idea.title}}">{{ idea.title }}</a></h2>
+                        <div class="idea-short-des">
+                            {{ idea.concept|truncatechars:'50'}}&nbsp;
+                            <a style="display:inline-block"
+                                href="{{ idea.get_absolute_url }}"
+                                title="Read full concept">Read more</a>
+                        </div>
+                        <div class="idea-metadata">
+                            <small>
+                                <a class="mr-2"
+                                    {% comment %} href="{% url 'ideas:conceivers-ideas' idea.conceiver.username %}" {% endcomment %}
+                                    title="{{idea.conceiver.get_full_name}}">{{ idea.conceiver.get_full_name|title|truncatechars:'30' }}</a>
+                            </small>
+                            <small class="mr-2 text-muted"
+                                title="{{ idea.date_created|date:" j M Y " }}">{{ post.date_published|cool_timesince }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
