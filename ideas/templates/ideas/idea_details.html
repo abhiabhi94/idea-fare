@@ -1,0 +1,43 @@
+{% extends "ideas/base.html" %}
+{% load static %}
+{% block content %}
+
+<div id="idea-share-container">
+    <div id="share">
+        {% include "share.html" %}
+    </div>
+    <div class="idea-contents">
+        <article id="idea-detail" class="content-section">
+            <div class="media-body">
+                <div class="idea-metadata">
+                    <div class="idea-title">
+                        <h1>{{ idea.title }}</h1>
+                    </div>
+                    <div class="idea-info">
+                        {% include "ideas/idea_conceiver.html" %}
+                        <small class="text-muted mr-2"
+                            title="{{ idea.date_created }}">Created: {{ idea.date_created|date:"j M Y" }}</small>
+                        {% if idea.date_update %}
+                        <small class="text-muted date-modified"
+                            title="{{ post.date_updated }}">Last modified: {{ post.date_updated|date:"j M Y" }}</small>
+                        {% endif %}
+                        {% if request.user == idea.conceiver %}
+                        <div id="post-options">
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1 ml-2"
+                                href="{% url 'ideas:idea-update' idea.slug %}"
+                                title="Tinker">Tinker</a>
+                            <a class="btn btn-danger btn-sm mt-1 mb-1 ml-2"
+                                href="{% url 'ideas:idea-delete' idea.slug %}"
+                                title="Delete">Delete</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="idea-content mt-4">{{ idea.concept }}</div>
+                {% comment %} {% include "tags.html" with tags=post.get_tags_list %} {% endcomment %}
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock content %}
+

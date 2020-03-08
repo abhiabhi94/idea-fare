@@ -2,7 +2,6 @@
 {% load meta %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head {% meta_namespaces %}>
     <meta charset="utf-8">
     <meta name="viewport"
@@ -162,8 +161,7 @@
                                 data-toggle="dropdown"></a>
                             {% comment %} <i class="fa fa-caret-down"></i> {% endcomment %}
                             <div class="dropdown-menu">
-                                <p class="ml-1 mb-0">Signed in as <strong>{{user.username}}</strong>
-                                    <p>
+                                <p class="ml-1 mb-0">Signed in as <strong>{{ user.username }}</strong></p>
                                         {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:idea-create' %}" title="New Idea">New Idea</a> {% endcomment %}
                                         {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:my-idea' user %}" title="My Ideas">My Ideas</a> {% endcomment %}
                                         {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:user-hits' user %}" title="Hits">My Hits</a> {% endcomment %}
@@ -184,6 +182,7 @@
         </nav>
     </header>
 
+    <h1>{{static}}</h1>
     <main role="main" id="main">
         <div class="container-fluid">
             <div class="row">
@@ -205,9 +204,12 @@
             </div>
         </div>
     </main>
+    {% include "ideas/footer.html" %}
     <script>
         window.CSRF_TOKEN = "{{ csrf_token }}"
     </script>
+    <script
+        src="{% static 'ideas/main.js' %}"</script>
 </body>
 {% block extrabottom %} {% endblock extrabottom %}
 

@@ -1,0 +1,56 @@
+<footer class="container-fluid mt-auto">
+    <div class="row">
+        <div class="col">
+            <div class="subscription">
+                <h5 id="noText">Stay updated with our latest articles and other stuff</h5>
+                <div id="sub-response"></div>
+                <form class="subForm" action="{% url 'ideas:subscription' %}" method="post">
+                    {% csrf_token %}
+                    <input id="email" type="email" name="email" placeholder="Enter Email.." required>
+                    <button type="submit" class="btn btn-sm btn-outline-info subscribe" value="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="col">
+            <div class="contact" id="contact">
+                <a href="mailto:dummy@email.com"><i class="fa fa-envelope"></i>
+                    <h6 class="phone">dummy@email.com</h6>
+                </a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="social-icons">
+                <h5 class="footer-text-color">Let's Connect</h5>
+                {% with "facebook twitter instagram" as socials %}
+                {% for social in socials.split %}
+                {% with "https://"|add:social|add:".com/"|add:"theideafare" as social_link %}
+                
+                {% include "./social_icons.html" with link=social_link  iclass=social %}
+                {% endwith %}
+                {% endfor %}
+                {% endwith %}
+                <a style="color: white;" class="mr-4" href="https://t.me/theideafare" target="_blank"><i class="fa fa-telegram"></i></a>
+                <a style="color: white;" class="mr-4" href="https://github.com/abhiabhi94/idea-fare" target="_blank"><i class="fa fa-linkedin"></i></a>
+                <a style="color: white;" class="mr-4" href="{% url 'ideas:rss-feed' %}" target="_blank"><i class="fa fa-rss"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="copyright">
+                <h6><a href="{% url 'ideas:content-policy' %}"
+                    title="Content Policy">Content Policy</a> | <a href="{% url 'ideas:privacy-policy' %}" title="Privacy Policy">Privacy Policy</a> | ©2020 IdeaFare All rights reserved</h6>
+            </div>
+        </div>
+        <div class="col">
+            <div class="about">
+                <a href="{% url 'ideas:about' %}" title="About IdeaFare">About Us</a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="made-with-love">
+                <h6>Made with <i class="fa fa-heart"></i> from Tatarpur, Saidpur</h6>
+            </div>
+        </div>
+    </div>
+</footer>

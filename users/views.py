@@ -5,7 +5,6 @@ from meta.views import Meta
 from django.views.decorators.http import require_http_methods
 from users.forms import UserRegisterForm, UserUpdateForm
 
-# Create your views here.
 global meta_home
 meta_home = Meta(title='IdeaFare | Let us make the world a better place!',
                  description='Read, share and discuss about the ideas that you think can change the world.',

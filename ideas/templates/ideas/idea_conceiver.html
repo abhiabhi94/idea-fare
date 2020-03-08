@@ -1,0 +1,11 @@
+<small>
+    {% if idea.conceiver.is_anonymous %}
+    <a class="mr-2"
+        href="{% url 'ideas:conceiver-ideas' idea.conceiver.username %}"
+        title="{{ idea.conceiver }}">{{ idea.conceiver|title }}</a>
+    {% else %}
+    <a class="mr-2"
+        href="{% url 'ideas:conceiver-ideas' idea.conceiver.username %}"
+        title="{{ idea.conceiver.get_full_name }}">{{ idea.conceiver.get_full_name|title|truncatechars:'30' }}</a>
+    {% endif %}
+</small>

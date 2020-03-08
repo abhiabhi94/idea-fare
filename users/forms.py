@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from ideas.manager import email_verification
 
 
 class UserRegisterForm(UserCreationForm):
@@ -25,7 +26,11 @@ class UserRegisterForm(UserCreationForm):
         """
         email = self.cleaned_data.get('email').lower()
         username = self.cleaned_data.get('username').lower()
-        if email and User.objects.filter(email=email).exclude(username=username).exists():
+        if email_verification(email):
+            return forms.ValidationError(
+                f'Are you sure this is a valid email address? We suspect you made a typing error')
+
+        elif email and User.objects.filter(email=email).exclude(username=username).exists():
             raise forms.ValidationError(
                 f'This email address is already associated with another account.')
         return email
@@ -68,7 +73,11 @@ class UserUpdateForm(forms.ModelForm):
         """
         email = self.cleaned_data.get('email').lower()
         username = self.cleaned_data.get('username').lower()
-        if email and User.objects.filter(email=email).exclude(username=username).exists():
+        if email_verification(email):
+            return forms.ValidationError(
+                f'Are you sure this is a valid email address? We suspect you made a typing error')
+
+        elif email and User.objects.filter(email=email).exclude(username=username).exists():
             raise forms.ValidationError(
                 f'This email address is already associated with another account.')
         return email

@@ -1,0 +1,16 @@
+{% with request.build_absolute_uri as link %}
+<ul class="list-unstyled share-icon mt-2 mb-2">
+    <p class="text mt-0 mb-0">Share</p>
+        <li><a href="http://www.facebook.com/sharer.php?u={{link|urlencode}}" rel="nofollow noopener noreferrer" target="_blank"><i class="fa fa-facebook ml-2 mr-2"></i></a></li>
+        <li><a href="http://www.twitter.com/share?text={{object.title|urlencode}}&url={{link|urlencode}}" rel="nofollow noopener noreferrer" target="_blank"><i class="fa fa-twitter ml-2 mr-2"></i></a></li>
+        <li><a href="http://www.linkedin.com/shareArticle?mini=true&url={{link|urlencode:''}}&title={{object.title|urlencode}}&source=StayCurious-Blog" rel="nofollow noopener noreferrer" target="_blank" ><i class="fa fa-linkedin ml-2 mr-2"></i></a></li>
+        <li><a href="http://www.reddit.com/submit?url={{link|urlencode}}post-to-reddit-via-url&titile={{object.title|urlencode}}" rel="nofollow noopener noreferrer" target="_blank"><i class="fa fa-reddit ml-2 mr-2"></i></a></li>
+        {# <li><a href="http://www.pinterest.com/pin/create/link/u={{link|urlencode:''}}&description={{object.title|urlencode}}" rel="nofollow noopener noreferrer" target="_blank"><i class="fa fa-pinterest ml-2 mr-2"></a></li> #}
+        <li><a class="copy" data-text={{link}} title="Copy link"><i class="fa fa-clipboard ml-2 mr-2"></i></a></li>
+        {% comment %} {% if idea.id in user.get_hit_ideas %}
+        <li><a id="unlike" class="btn like" data-post={{post.slug}} data-url={% url 'ideas:like-idea'%} title="Nah! I'm not sure this idea is a hit"><i class="fa fa-bookmark" style="color:steelblue"></i></a></li>
+        {% else %}
+        <li><a id="like" class="btn like" data-post={{post.slug}} data-url={% url 'ideas:like-idea'%} title="This idea is a hit"><i class="fa fa-bookmark" style="color:darkgrey"></i></a></li>
+        {% endif %} {% endcomment %}
+</ul>
+{% endwith %}

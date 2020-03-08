@@ -17,11 +17,7 @@
                                 title="Read full concept">Read more</a>
                         </div>
                         <div class="idea-metadata">
-                            <small>
-                                <a class="mr-2"
-                                    {% comment %} href="{% url 'ideas:conceivers-ideas' idea.conceiver.username %}" {% endcomment %}
-                                    title="{{idea.conceiver.get_full_name}}">{{ idea.conceiver.get_full_name|title|truncatechars:'30' }}</a>
-                            </small>
+                            {% include "ideas/idea_conceiver.html" %}
                             <small class="mr-2 text-muted"
                                 title="{{ idea.date_created|date:" j M Y " }}">{{ post.date_published|cool_timesince }}</small>
                         </div>
