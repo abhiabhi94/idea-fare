@@ -15,6 +15,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http.response import HttpResponseBadRequest, JsonResponse
+from django.core.exceptions import PermissionDenied
 from meta.views import Meta
 from ideas.models import Idea
 from ideas.manager import (email_verification,
@@ -120,7 +121,6 @@ class IdeaCreateView(CreateView):
 
     def form_invalid(self, form):
         """For a valid form, check if the user wants the idea to be anonymous."""
-
         form = process_idea_form(request, form)
 
 
@@ -141,6 +141,7 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
 
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
 class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Allows only conceivers to update their idea"""
     model = Idea
     fields = ['title', 'concept', 'visibility'
               #   'tags',
@@ -163,6 +164,9 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         """ensuring the conceiver themselves is updating their idea"""
         idea = self.get_object()
+        if idea.user is None:
+            raise PermissionDenied(
+                'Idea by anonymous user can not be edited or deleted.')
         if self.request.user == idea.conceiver:
             return True
         raise PermissionDenied('You are not allowed to update this request')
@@ -170,6 +174,7 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
 class IdeaDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+    """Allow only conceivers to delete their idea and give a successfull message upon completion"""
     model = Idea
     fields = ['title', 'concept', 'visibility'
               # 'tags'
@@ -195,6 +200,10 @@ class IdeaDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
 
 @method_decorator(require_http_methods(['GET']), name='dispatch')
 class ConceiverIdeaListView(ListView):
+    """
+    Returns the list of all idea by a conceiver(user)
+    All anonymous users are considered the same.
+    """
     model = Idea
     template_name = 'ideas/conceiver_ideas.html'
     queryset = Idea.objects.all()
@@ -234,6 +243,7 @@ class ConceiverIdeaListView(ListView):
 
 
 class LatestPostRSSFeed(Feed):
+    """"Publish the RSS feed for latest public ideas"""
     title = 'Latest ideas from IdeaFare'
     link = ''
     description = meta_home.description
