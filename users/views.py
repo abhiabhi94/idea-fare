@@ -15,7 +15,7 @@ meta_home = Meta(title='IdeaFare | Let us make the world a better place!',
                  ])
 
 
-@require_http_methods(['GET'])
+@require_http_methods(['GET', 'POST'])
 def register(request):
     """Register a non-logged in user"""
     # Redirect to the homepage in case user is logged in.
@@ -30,18 +30,17 @@ def register(request):
     if(request.method == 'POST'):
         context['form'] = form = UserRegisterForm(request.POST)
         if(form.is_valid()):
-            form.save()
+            user = form.save()
             username = form.cleaned_data.get('username')
-            password = request.POST['password']
             messages.success(
                 request, f'Account created for {username}. You will now be able to Log In!')
-            user = authenticate(request, username=username, password=password)
             if user is not None:
-                login(request, user)
+                login(request, user,
+                      backend='django.contrib.auth.backends.ModelBackend')
             else:
-                messages.info(
-                    'Unable to log you in automatically. Please try going through the login page')
-            redirect('idea:home')
+                messages.info(request,
+                              'Unable to log you in automatically. Please try going through the login page')
+            return redirect('ideas:home')
 
     else:  # On GET request return a new form
         context['form'] = UserRegisterForm()
