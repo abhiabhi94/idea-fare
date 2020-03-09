@@ -5,6 +5,12 @@ from ideas.manager import email_verification
 
 
 class UserRegisterForm(UserCreationForm):
+    """
+    Register a user by extending the User model with the following information:
+        First Name
+        Last Name(optional)-> not all people have a last name
+        Email
+    """
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100, required=False)
     email = forms.EmailField()
@@ -53,6 +59,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+    """Allows users to update their personal information"""
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100, required=False)
     email = forms.EmailField()

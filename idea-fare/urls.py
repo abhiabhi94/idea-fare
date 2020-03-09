@@ -13,6 +13,7 @@ urlpatterns = [
 urlpatterns += [
     path('', include('ideas.urls')),
     path('register/', user_views.register, name='register'),
+    path('profile/', user_views.profile, name='profile'),
     path('login/', auth_views.LoginView.as_view(
         redirect_authenticated_user=True,
         template_name='Users/login.html'),
@@ -46,7 +47,6 @@ urlpatterns += [
     #      condition(last_modified_func=latest_entry)(rss_feed()),
     #      name='rss-feed'
     #      ),
-    path('privacy-policy', user_views.privacy_policy, name='privacy-policy'),
 ]
 
 if settings.DEBUG:

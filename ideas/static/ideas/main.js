@@ -4,7 +4,7 @@ $(document).ready(function(event) {
     $('.subForm').submit(subscribe);
     $('.copy').on('click', function(event) {
         event.preventDefault();
-        //Check if the request if for a post or the window
+        // Check if the request if for a idea or the window
         let text;
         if ($(this).data) {
             text = $(this).data('text');
@@ -16,7 +16,7 @@ $(document).ready(function(event) {
         $('body').append(dummy);
         dummy.value = text;
         dummy.select();
-        //For IE
+        // For IE
         if (window.clipboardData) {
             window.clipboardData.setData('Text', text);
         } else {

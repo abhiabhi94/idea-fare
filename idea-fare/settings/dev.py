@@ -7,20 +7,23 @@ from .base import *
 global ALLOWED_HOSTS
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-
+######### For Debug Toolbar ##########
 INSTALLED_APPS += ['debug_toolbar']
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 INTERNAL_IPS = ALLOWED_HOSTS
+##################################
 
 
 def add_ip_to_host(port=8000):
     """
+    Adds local IPv4 and public IP addresses to ALLOWED_HOST
+
     Returns
         None
 
     Args:
-        port which handles the request
-    Add local IPv4 and public IP addresses to ALLOWED_HOST
+        port:int
+        port which will handle the request
     """
 
     IP_PRIVATE = getoutput('hostname -I').strip()
