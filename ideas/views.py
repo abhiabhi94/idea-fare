@@ -111,17 +111,28 @@ class Home(ListView):
 
 
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
-class IdeaCreateView(CreateView):
+class AnonymousIdeaCreateView(CreateView):
+    """Submit ideas anonymously"""
     template_name = 'ideas/idea_form.html'
     context_object_name = 'idea'
     model = Idea
-    fields = ['title', 'concept', 'visibility',
+    fields = ['title', 'concept',
               #   'tags'
               ]
 
-    def form_invalid(self, form):
+    def form_valid(self, form):
         """For a valid form, check if the user wants the idea to be anonymous."""
-        form = process_idea_form(request, form)
+        process_idea_form(self.request, form)
+        return super().form_valid(form)
+
+
+@method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
+class IdeaCreateView(LoginRequiredMixin, AnonymousIdeaCreateView):
+    """Submit ideas non-anonymously"""
+
+    fields = ['title', 'concept', 'visibility',
+              #   'tags'
+              ]
 
 
 @method_decorator(require_http_methods(['GET']), name='dispatch')

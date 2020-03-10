@@ -39,7 +39,7 @@ class Idea(models.Model):
         set the slug for the first time only
             - slugify the title with a random alphanumeric
         """
-        LENGTH_OF_RANDOM_ALPHANUMERIC = 16
+        LENGTH_OF_RANDOM_ALPHANUMERIC = 4
 
         if self.date_updated is None:
             self.slug = slugify(

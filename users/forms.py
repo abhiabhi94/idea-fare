@@ -32,11 +32,11 @@ class UserRegisterForm(UserCreationForm):
         """
         email = self.cleaned_data.get('email').lower()
         username = self.cleaned_data.get('username').lower()
-        if email_verification(email):
-            return forms.ValidationError(
+        if not email_verification(email):
+            raise forms.ValidationError(
                 f'Are you sure this is a valid email address? We suspect you made a typing error')
 
-        elif email and User.objects.filter(email=email).exclude(username=username).exists():
+        if email and User.objects.filter(email=email).exclude(username=username).exists():
             raise forms.ValidationError(
                 f'This email address is already associated with another account.')
         return email

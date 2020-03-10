@@ -1,3 +1,6 @@
+from django.shortcuts import redirect
+from django.conf import settings
+from django.contrib import messages
 from validate_email import validate_email
 from ideas.models import Idea
 
@@ -14,9 +17,11 @@ def process_idea_form(request, form):
         form: IdeaForm
             The form to be processed
     """
-    if not (request.POST.get('anonymous', True) == 'anonymous'):
-        form.instance.conceiver = request.user
-    else:  # Anonymous posts can't be made private
+    if not (request.POST.get('anonymous', True) == 'anonymous'):  # Non-anonymous ideas
+        if request.user.is_authenticated:
+            # For authenticated users
+            form.instance.user = request.user
+    else:  # Anonymous ideas can't be made private
         form.instance.visibility = True
 
     return form
