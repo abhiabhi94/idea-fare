@@ -221,25 +221,23 @@
                         {% if user.is_authenticated %}
                             <div id="dropdown" class="dropdown">
                                 {% comment %} <button class="dropbtn">{{user.first_name}}</button> {% endcomment %}
-                                <a href="#" class="ml-3"
-                                    title="Profile Options"
-                                    data-toggle="dropdown">Profile</a>
+                                <a class="nav-link" href="#" class="ml-3" title="Profile Options" data-toggle="dropdown">Profile</a>
                                 {% comment %} <i class="fa fa-caret-down"></i> {% endcomment %}
                                 <div class="dropdown-menu">
                                     <p class="ml-1 mb-0">Signed in as <strong>{{ user.username }}</strong></p>
-                                            <a class="nav-item nav-link" href="{% url 'ideas:idea-create' %}" title="New Idea">New Idea</a>
-                                            {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:my-idea' user %}" title="My Ideas">My Ideas</a> {% endcomment %}
-                                            {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:user-hits' user %}" title="Hits">My Hits</a> {% endcomment %}
-                                            <a class="nav-item nav-link" href="{% url 'logout' %}" title="Log Out">LogOut</a>
+                                    <a class="nav-item nav-link" href="{% url 'ideas:idea-create' %}" title="New Idea">New Idea</a>
+                                    {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:my-idea' user %}" title="My Ideas">My Ideas</a> {% endcomment %}
+                                    {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:user-hits' user %}" title="Hits">My Hits</a> {% endcomment %}
+                                    <a class="nav-item nav-link" href="{% url 'logout' %}" title="Log Out">LogOut</a>
                                 </div>
                             </div>
                         {% else %}
-                            <a class="nav-item" 
-                            href="{% url 'login' %}" 
-                            title="Login">Login</a>
-                            <a class="nav-item" 
-                            href="{% url 'register' %}" 
-                            title="Register">Register</a>
+                        <ul class="nav">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}" title="Login">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}" title="Register">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'ideas:idea-create' %}" title="Register">Post New Idea</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'ideas:idea-create-anonymous' %}" title="Register">Post New Idea Anonymously</a></li>
+                        </ul>
                         {% endif %}
                     </div>
                 </div>

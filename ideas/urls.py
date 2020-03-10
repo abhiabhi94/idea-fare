@@ -13,7 +13,7 @@ urlpatterns = [
     path('privacy-policy/', views.privacy_policy, name='privacy-policy'),
     path('idea/new/', views.IdeaCreateView.as_view(), name='idea-create'),
     path('idea/anonymous/new/',
-         views.AnonymousIdeaCreateView.as_view(), name='idea-create'),
+         views.AnonymousIdeaCreateView.as_view(), name='idea-create-anonymous'),
     path('idea/<slug:slug>/',
          views.IdeaDetailView.as_view(), name='idea-details'),
     path('idea/<slug:slug>/update',
