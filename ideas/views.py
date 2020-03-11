@@ -227,11 +227,12 @@ class ConceiverIdeaListView(ListView):
         if username is not None and username == 'anonymous':
             return self.queryset.filter(user=None)
 
-        user = get_object_or_404(User, username=username)
-        if self.request.user == user:
+        user = get_object_or_404(User, username=username.lower())
+
+        if self.request.user == user:  # For logged in users return all of their ideas
             return self.queryset.filter(user=user)
 
-        # Show only public posts
+        # Show only public ideas
         return get_public_ideas().filter(user=user)
 
     def get_context_data(self, **kwargs):
@@ -243,7 +244,7 @@ class ConceiverIdeaListView(ListView):
             user = AnonymousUser
             name = user
         else:
-            user = get_object_or_404(User, username=username)
+            user = get_object_or_404(User, username=username.lower())
             name = user.get_full_name()
 
         context['meta'] = Meta(title=f'{name} | Idea',

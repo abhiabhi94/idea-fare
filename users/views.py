@@ -72,23 +72,3 @@ def profile(request):
                            description=f'Profile of {request.user.get_full_name().title()} on IdeaFrame',
                            )
     return render(request, template_name, context)
-
-
-@require_http_methods(['GET'])
-def privacy_policy(request):
-    context = {}
-    template_name = 'Blog/privacy_policy.html'
-    context['meta'] = Meta(title=f'Privacy Policy | HackAdda',
-                           description=f'Privacy Policy by HackAdda',
-                           keywords=meta_home.keywords + ['privacy policy'])
-    return render(request, template_name, context)
-
-
-@require_http_methods(['GET'])
-def image_license(request):
-    context = {}
-    template_name = 'Blog/image_license.html'
-    context['meta'] = Meta(title=f'Image License | HackAdda',
-                           description=f'Image License by HackAdda',
-                           keywords=meta_home.keywords + ['image license'])
-    return render(request, template_name, context)
