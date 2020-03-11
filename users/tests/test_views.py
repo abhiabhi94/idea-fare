@@ -87,14 +87,15 @@ class UserDetailsTest(TestCase):
             - correct template is used for rendering
             - data is updated successfully on post request
         """
-        data = {
+        new_data = {
             'username': 'tester2',
             'first_name': 'Jachi',
             'last_name': 'karta',
             'email': 'jachkarta+test1@gmail.com',
-            'password1': 'user1234#',
-            'password2': 'user1234#',
+            # 'password1': 'user123#',
+            # 'password2': 'user123#',
         }
+        old_password = 'user123#'
         url_profile = reverse('profile')
         login = self.client.login(username='tester', password='user123#')
         # Test GET request
@@ -104,15 +105,15 @@ class UserDetailsTest(TestCase):
             profile_get, template_name='users/profile.html')
 
         # Test POST request
-        profile_post = self.client.post(url_profile, data=data)
+        profile_post = self.client.post(url_profile, data=new_data)
         # Test HTTP response
         self.assertEqual(profile_post.status_code, 302)
 
-        user = get_object_or_404(User, username=data['username'])
+        user = get_object_or_404(User, username=new_data['username'])
 
         # Test profile values
-        self.assertEqual(user.username, data['username'])
-        self.assertEqual(user.first_name, data['first_name'])
-        self.assertEqual(user.last_name, data['last_name'])
-        self.assertEqual(user.email, data['email'])
-        self.assertEqual(user.check_password(data['password1']), True)
+        self.assertEqual(user.username, new_data['username'])
+        self.assertEqual(user.first_name, new_data['first_name'])
+        self.assertEqual(user.last_name, new_data['last_name'])
+        self.assertEqual(user.email, new_data['email'])
+        self.assertEqual(user.check_password(old_password), True)
