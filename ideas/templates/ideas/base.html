@@ -1,5 +1,6 @@
 {% load static  %}
 {% load meta %}
+{% load define %}
 <!DOCTYPE html>
 <html lang="en">
 <head {% meta_namespaces %}>
@@ -218,27 +219,52 @@
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav ml-auto mr-auto">
-                        {% if user.is_authenticated %}
-                            <div id="dropdown" class="dropdown">
-                                {% comment %} <button class="dropbtn">{{user.first_name}}</button> {% endcomment %}
-                                <a class="nav-link" href="#" class="ml-3" title="Profile Options" data-toggle="dropdown">Profile</a>
-                                {% comment %} <i class="fa fa-caret-down"></i> {% endcomment %}
-                                <div class="dropdown-menu">
+                        <div id="dropdown" class="dropdown">
+                            <a class="nav-link"
+                                href="#"
+                                class="ml-3"
+                                title="Options"
+                                data-toggle="dropdown">Options</a>
+                            <div class="dropdown-menu">
+                                <ul class="nav">
+                                    {% if user.is_authenticated %}
+                                    {% define "logged" as user_flag %}
                                     <p class="ml-1 mb-0">Signed in as <strong>{{ user.username }}</strong></p>
-                                    <a class="nav-item nav-link" href="{% url 'ideas:idea-create' %}" title="New Idea">New Idea</a>
-                                    {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:my-idea' user %}" title="My Ideas">My Ideas</a> {% endcomment %}
-                                    {% comment %} <a class="nav-item nav-link" href="{% url 'ideas:user-hits' user %}" title="Hits">My Hits</a> {% endcomment %}
-                                    <a class="nav-item nav-link" href="{% url 'logout' %}" title="Log Out">LogOut</a>
-                                </div>
+                                    {% endif %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" 
+                                            href="{% url 'ideas:idea-create' %}" 
+                                            title="Post New Idea">Post New Idea</a></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" 
+                                            href="{% url 'ideas:idea-create-anonymous' %}" 
+                                            title="Post Idea Anonymously">Post New Idea Anonymously</a></li>
+                                    {% comment %} For anonymous users {% endcomment %}
+                                    {% if user_flag != "logged" %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" 
+                                            href="{% url 'login' %}" 
+                                            title="Login">Login</a></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" 
+                                            href="{% url 'register' %}" 
+                                            title="Register">Register</a></li>
+                                    {% endif %}
+                                    {% comment %} For users logged in {% endcomment %}
+                                    {% if user_flag == "logged" %}
+                                    {% comment %} <a class="nav-item nav-link" 
+                                        href="{% url 'ideas:my-idea' user %}"
+                                        title="My Ideas">My Ideas</a> {% endcomment %}
+                                    {% comment %} <a class="nav-item nav-link"
+                                        href="{% url 'ideas:user-hits' user %}"
+                                        title="Hits">My Hits</a> {% endcomment %}
+                                    <a class="nav-item nav-link"
+                                            href="{% url 'logout' %}"
+                                            title="Log Out">LogOut</a>
+                                    {% endif %}
+                                </ul>
                             </div>
-                        {% else %}
-                        <ul class="nav">
-                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}" title="Login">Login</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}" title="Register">Register</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'ideas:idea-create' %}" title="Register">Post New Idea</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'ideas:idea-create-anonymous' %}" title="Register">Post New Idea Anonymously</a></li>
-                        </ul>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
