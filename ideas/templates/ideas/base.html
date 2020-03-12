@@ -249,18 +249,23 @@
                                         <a class="nav-link" 
                                             href="{% url 'register' %}" 
                                             title="Register">Register</a></li>
-                                    {% endif %}
+                                    {% else %}
                                     {% comment %} For users logged in {% endcomment %}
-                                    {% if user_flag == "logged" %}
-                                    {% comment %} <a class="nav-item nav-link" 
-                                        href="{% url 'ideas:my-idea' user %}"
-                                        title="My Ideas">My Ideas</a> {% endcomment %}
+                                    <a class="nav-item nav-link" 
+                                        href="{% url 'ideas:conceiver-ideas' user %}"
+                                        title="My Ideas">My Ideas</a>
                                     {% comment %} <a class="nav-item nav-link"
                                         href="{% url 'ideas:user-hits' user %}"
                                         title="Hits">My Hits</a> {% endcomment %}
+                                    <a class="nav-item nav-link" 
+                                        href="{% url 'profile' %}"
+                                        title="Profile">Profile</a>
+                                    <a class="nav-item nav-link" 
+                                        href="{% url 'password-change' %}"
+                                        title="Change Password">Change Password</a>
                                     <a class="nav-item nav-link"
-                                            href="{% url 'logout' %}"
-                                            title="Log Out">LogOut</a>
+                                        href="{% url 'logout' %}"
+                                        title="Log Out">LogOut</a>
                                     {% endif %}
                                 </ul>
                             </div>

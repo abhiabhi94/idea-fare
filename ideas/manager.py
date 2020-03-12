@@ -1,3 +1,7 @@
+"""
+Module contains functions that will be re-usable inside applications.
+Ideally, the logical part (apart from that written in models) in views should be placed here.
+"""
 from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages

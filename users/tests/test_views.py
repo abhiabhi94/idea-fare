@@ -92,10 +92,7 @@ class UserDetailsTest(TestCase):
             'first_name': 'Jachi',
             'last_name': 'karta',
             'email': 'jachkarta+test1@gmail.com',
-            # 'password1': 'user123#',
-            # 'password2': 'user123#',
         }
-        old_password = 'user123#'
         url_profile = reverse('profile')
         login = self.client.login(username='tester', password='user123#')
         # Test GET request
@@ -107,7 +104,7 @@ class UserDetailsTest(TestCase):
         # Test POST request
         profile_post = self.client.post(url_profile, data=new_data)
         # Test HTTP response
-        self.assertEqual(profile_post.status_code, 302)
+        self.assertEqual(profile_post.status_code, 200)
 
         user = get_object_or_404(User, username=new_data['username'])
 
@@ -116,4 +113,18 @@ class UserDetailsTest(TestCase):
         self.assertEqual(user.first_name, new_data['first_name'])
         self.assertEqual(user.last_name, new_data['last_name'])
         self.assertEqual(user.email, new_data['email'])
-        self.assertEqual(user.check_password(old_password), True)
+
+    def test_password_change(self):
+        """Test whether users can change their password and are logged back in"""
+        username = 'tester'
+        data = {
+            'old_password': 'user123#',
+            'new_password1': 'NewUser123#',
+            'new_password2': 'NewUser123#'
+        }
+        url = reverse('password-change')
+        login = self.client.login(
+            username=username, password=data['old_password'])
+        password_change = self.client.post(url, data=data)
+        self.assertRedirects(
+            password_change, expected_url=reverse('ideas:home'))
