@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate
 from meta.views import Meta
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from users.forms import UserRegisterForm, UserUpdateForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
+from users.forms import UserRegisterForm, UserUpdateForm
 from users.manager import log_in_user
 
 global meta_home
