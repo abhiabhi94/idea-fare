@@ -17,6 +17,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: ESLint Action
+      uses: hallee/eslint-action@1.0.1
+    - name: Pyflakes Syntax Checker
+      uses: lgeiger/pyflakes-action@v1.0.1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -28,7 +32,3 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
-    - name: ESLint Action
-      uses: hallee/eslint-action@1.0.1
-    - name: Pyflakes Syntax Checker
-      uses: lgeiger/pyflakes-action@v1.0.1
