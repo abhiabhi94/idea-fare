@@ -1,10 +1,10 @@
-"""Reads the contents of setup.json for setting up the project"""
-import json
+"""Reads the contents from the environment variable of the\
+    virtual environment for setting up the project"""
+import os
 
-SETUP_FILE = 'setup.json'
 
-with open(SETUP_FILE) as setup_file:
-    setup = json.load(setup_file)
-
-project_name = setup['NAME']
-CONFIG_FILE = setup['CONFIG_FILE']
+project_name = os.getenv('NAME')
+secret_key = os.getenv('SECRET_KEY')
+email_host_user = os.getenv('EMAIL_USER')
+email_host_pass = os.getenv('EMAIL_PASS')
+prod_flag = os.getenv('PROD', None)

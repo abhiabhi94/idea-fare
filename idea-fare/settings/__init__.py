@@ -4,22 +4,16 @@ import sys
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
-from setup.setup import CONFIG_FILE  # nopep8
+from setup.setup import *  # nopep8
 
-try:
-    with open(CONFIG_FILE) as config_file:
-        config = json.load(config_file)
-        config['PROD']
-
+if prod_flag is not None:  # production
     from .prod import *
-
-
-except KeyError:
+else:  # development
     from .dev import *
 
-SECRET_KEY = config['SECRET_KEY']
-EMAIL_HOST_USER = config['EMAIL_USER']
-EMAIL_HOST_PASSWORD = config['EMAIL_PASS']
+SECRET_KEY = secret_key
+EMAIL_HOST_USER = email_host_user
+EMAIL_HOST_PASSWORD = email_host_pass
 
 ##### For MySQL use this ########################
 

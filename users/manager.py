@@ -1,6 +1,7 @@
 """
 Module contains functions that will be re-usable inside applications.
-Ideally, the logical part (apart from that written in models) in views should be placed here.
+Ideally, the logical part (apart from that written in models)\
+    in views should be placed here.
 """
 from django.contrib import messages
 from django.contrib.auth import login
