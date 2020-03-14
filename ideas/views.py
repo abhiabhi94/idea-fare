@@ -10,12 +10,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.http import require_http_methods
 from django.utils.decorators import method_decorator
 from django.contrib.syndication.views import Feed
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http.response import HttpResponseBadRequest, JsonResponse
 from django.core.exceptions import PermissionDenied
+from django.db.utils import IntegrityError
 from meta.views import Meta
 from ideas.models import Idea
 from ideas.manager import (email_verification,
@@ -44,23 +45,24 @@ def subscribe(request):
     """
     data = {'msg': '', 'email': '', 'status': -1}
     if request.method == 'POST' and request.is_ajax():
-        email = request.POST['email']
-        data['email'] = email
-        if email_verification(email):
-            try:
-                Subscriber.objects.create(email=email)
-                data['msg'] = ' is now registered successfully with us'
-                data['status'] = 0
-            except IntegrityError:
-                data['msg'] = ' is already registered with us'
-            except:
-                data['status'] = 1
-                data['msg'] = 'There seems to be an issue on our side. Please retry.'
-            return JsonResponse(data)
+        email = request.POST.get('email', None)
+        if email is not None:
+            data['email'] = email
+            if email_verification(email):
+                try:
+                    Subscriber.objects.create(email=email)
+                    data['msg'] = ' is now registered successfully with us'
+                    data['status'] = 0
+                except IntegrityError:
+                    data['msg'] = ' is already registered with us'
+                except:
+                    data['status'] = 1
+                    data['msg'] = 'There seems to be an issue on our side. Please retry.'
+                return JsonResponse(data)
 
-        data['msg'] = ' is not a valid email'
-        return JsonResponse(data)
-    return HttpResponseBadRequest
+            data['msg'] = ' is not a valid email'
+            return JsonResponse(data)
+    return HttpResponseBadRequest('Bad Request! email not present')
 
 
 @require_http_methods(['GET'])
