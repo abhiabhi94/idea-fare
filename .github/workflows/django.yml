@@ -30,6 +30,6 @@ jobs:
     - name: Run Tests
       env:
         NAME: ${{ secrets.NAME }}
-        SECURITY_KEY: ${{ secrets.SECURITY_KEY }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
         python manage.py test
