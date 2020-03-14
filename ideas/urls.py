@@ -4,9 +4,9 @@ from django.views.decorators.http import condition
 from ideas import views
 from ideas.manager import latest_entry
 
-app_name = 'ideas';
+app_name = 'ideas'
 
-urlpatterns =
+urlpatterns = [
     path('', views.Home.as_view(), name='home'),
     path('about/', views.about, name='about'),
     path('content-policy/', views.content_policy, name='content-policy'),
