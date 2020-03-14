@@ -17,8 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Pyflakes Syntax Checker
-      uses: lgeiger/pyflakes-action@v1.0.1
+    - name: Python Syntax Checker
+      uses: cclauss/Find-Python-syntax-errors-action@v0.2.0
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
