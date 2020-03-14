@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate
 from meta.views import Meta
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required

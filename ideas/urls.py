@@ -1,5 +1,4 @@
-from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path
 from django.views.decorators.http import condition
 from ideas import views
 from ideas.manager import latest_entry

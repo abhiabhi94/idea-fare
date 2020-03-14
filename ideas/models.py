@@ -4,7 +4,6 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-from meta.models import ModelMeta
 
 AnonymousUser.username = 'anonymous'
 

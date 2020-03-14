@@ -1,5 +1,5 @@
 from django.test import TestCase
-from users.forms import UserRegisterForm, UserUpdateForm
+from users.forms import UserRegisterForm
 
 
 class UserRegistrationFormTest(TestCase):

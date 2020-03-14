@@ -2,9 +2,6 @@
 Module contains functions that will be re-usable inside applications.
 Ideally, the logical part (apart from that written in models) in views should be placed here.
 """
-from django.shortcuts import redirect
-from django.conf import settings
-from django.contrib import messages
 from validate_email import validate_email
 from ideas.models import Idea
 

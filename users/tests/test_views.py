@@ -1,4 +1,4 @@
-from django.test import TestCase, SimpleTestCase
+from django.test import TestCase
 from django.shortcuts import reverse, get_object_or_404
 from django.contrib.auth.models import User
 from django.core import mail
@@ -83,6 +83,7 @@ class UserDetailsTest(TestCase):
         """Test whether a logged in user is redirected to home when trying to access register link"""
         login = self.client.login(
             username=self.username, password=self.password)
+        self.assertEqual(login, True)
         response = self.client.get(reverse('register'))
         self.assertRedirects(response, expected_url=reverse('ideas:home'))
 
@@ -107,6 +108,7 @@ class UserDetailsTest(TestCase):
         url_profile = reverse('profile')
         login = self.client.login(
             username=self.username, password=self.password)
+        self.assertEqual(login, True)
         # Test GET request
         profile_get = self.client.get(url_profile)
         self.assertEqual(profile_get.status_code, 200)
@@ -137,6 +139,7 @@ class UserDetailsTest(TestCase):
         url = reverse('password-change')
         login = self.client.login(
             username=self.username, password=self.password)
+        self.assertEqual(login, True)
         password_change = self.client.post(url, data=data)
         self.assertRedirects(
             password_change, expected_url=reverse('ideas:home'))
