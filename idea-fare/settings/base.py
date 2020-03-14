@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     ##############################
     'meta',
     'crispy_forms',
@@ -103,6 +104,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# for usingt the sites framework
+SITE_ID = 1
 
 ### Used by Django-Meta app for rendering meta tags ###
 META_SITE_DOMAIN = ''

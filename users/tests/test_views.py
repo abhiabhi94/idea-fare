@@ -1,10 +1,20 @@
 from django.test import TestCase, SimpleTestCase
 from django.shortcuts import reverse, get_object_or_404
 from django.contrib.auth.models import User
+from django.core import mail
+from django.contrib.sites.models import Site
 from users.forms import UserRegisterForm
 
 
 class UserDetailsTest(TestCase):
+
+    def __init__(self, *args, **kwargs):
+        super(UserDetailsTest, self).__init__(*args, **kwargs)
+        self.username = 'tester'
+        self.email = 'jachkarta@gmail.com'
+        self.first_name = 'Jach'
+        self.last_name = 'Karta'
+        self.password = 'user123#'
 
     @classmethod
     def setUpTestData(cls):
@@ -32,16 +42,16 @@ class UserDetailsTest(TestCase):
 
     def test_username_case_insensitive(self):
         """Test whether username field is case insensitive"""
-        email = 'jachkarta@gmail.com'
-        username = 'tester'
+        email = self.email
+        username = self.username
 
         user = User.objects.get(email=email)
         self.assertEqual(user.username, username)
 
     def test_email_case_insensitive(self):
         """Test whether email field is case insensitive"""
-        email = 'jachkarta@gmail.com'
-        username = 'tester'
+        email = self.email
+        username = self.username
 
         user = User.objects.get(username=username)
         self.assertEqual(user.email, email)
@@ -49,7 +59,7 @@ class UserDetailsTest(TestCase):
     def test_email_integrity(self):
         """Test invalidation for use of 1 email by more than 1 accounts,\
             raising of appropriate validation error"""
-        email = 'jachkarta@gmail.com'
+        email = self.email
 
         form = UserRegisterForm(data={'email': email, 'username': 'test'})
         # Test invalidation of form
@@ -71,7 +81,8 @@ class UserDetailsTest(TestCase):
 
     def test_redirect_authenticated_user_on_register(self):
         """Test whether a logged in user is redirected to home when trying to access register link"""
-        login = self.client.login(username='tester', password='user123#')
+        login = self.client.login(
+            username=self.username, password=self.password)
         response = self.client.get(reverse('register'))
         self.assertRedirects(response, expected_url=reverse('ideas:home'))
 
@@ -94,7 +105,8 @@ class UserDetailsTest(TestCase):
             'email': 'jachkarta+test1@gmail.com',
         }
         url_profile = reverse('profile')
-        login = self.client.login(username='tester', password='user123#')
+        login = self.client.login(
+            username=self.username, password=self.password)
         # Test GET request
         profile_get = self.client.get(url_profile)
         self.assertEqual(profile_get.status_code, 200)
@@ -116,15 +128,65 @@ class UserDetailsTest(TestCase):
 
     def test_password_change(self):
         """Test whether users can change their password and are logged back in"""
-        username = 'tester'
+        new_pass = 'NewUser123#'
         data = {
-            'old_password': 'user123#',
-            'new_password1': 'NewUser123#',
-            'new_password2': 'NewUser123#'
+            'old_password': self.password,
+            'new_password1': new_pass,
+            'new_password2': new_pass
         }
         url = reverse('password-change')
         login = self.client.login(
-            username=username, password=data['old_password'])
+            username=self.username, password=self.password)
         password_change = self.client.post(url, data=data)
         self.assertRedirects(
             password_change, expected_url=reverse('ideas:home'))
+
+    def test_password_reset_procedure(self):
+        """
+        Test whether
+            - password-reset link is accessible
+            - form can be posted successfully from this link
+            - an email is send to their with the site name in subject
+            - the link to reset password form is working 
+        """
+        url_password_reset = reverse('password_reset')
+        site_name = Site.objects.get(id=1).name
+        new_pass = 'Newpass123#'
+
+        # test GET response from password-reset
+        response = self.client.get(url_password_reset)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/password_reset.html')
+
+        # test POST response from password-reset
+        response = self.client.post(
+            url_password_reset, data={'email': self.email})
+        self.assertRedirects(
+            response, expected_url=reverse('password_reset_done'))
+
+        # Checks related to email
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject,
+                         f'Password reset on {site_name}')
+
+        # get the userid and token from the resposne
+        uid = response.context[0]['uid']
+        token = response.context[0]['token']
+        url_password_reset_confirm = reverse('password_reset_confirm', kwargs={
+            'token': token,
+            'uidb64': uid
+        })
+        response = self.client.get(url_password_reset_confirm)
+        # No reverse exists for this url
+        url_password_reset_confirm_set = f'/password-reset-confirm/{uid}/set-password/'
+        self.assertRedirects(
+            response, expected_url=url_password_reset_confirm_set)
+
+        # Now post to the same url with the new password
+        response = self.client.post(
+            url_password_reset_confirm, data={
+                'new_password1': new_pass,
+                'new_password1': new_pass
+            })
+        self.assertRedirects(
+            response, expected_url=url_password_reset_confirm_set)
