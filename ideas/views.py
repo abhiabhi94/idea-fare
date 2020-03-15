@@ -152,7 +152,7 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
         return True
 
 
-@method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
+@method_decorator(require_http_methods(['GET', 'POST', 'PUT']), name='dispatch')
 class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Allows only conceivers to update their idea"""
     model = Idea
@@ -185,7 +185,7 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         raise PermissionDenied('You are not allowed to update this request')
 
 
-@method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
+@method_decorator(require_http_methods(['GET', 'POST', 'DELETE']), name='dispatch')
 class IdeaDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """Allow only conceivers to delete their idea and give a successfull message upon completion"""
     model = Idea

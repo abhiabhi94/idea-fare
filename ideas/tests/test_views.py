@@ -36,8 +36,6 @@ class FunctionBasedViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'ideas/privacy_policy.html')
 
-    # 3
-
     def test_subscription_with_dummy_email(self):
         """Test whether dummy emails can't be used for subscription"""
         response = self.client.post(
@@ -109,7 +107,9 @@ class ClassBasedViewTest(TestCase):
     def setUpTestData(cls):
         """
         Create
-        - 1 user
+        - 2 users
+            - 1 will be used to associate ideas
+            - 2nd will be used for checking unauthorised access during tests
         - 24 ideas to test pagination\
             ( text inside brackets indicate pattern used for generating id)
             - 6 anonymous ideas (x % 4 == 0)
@@ -122,6 +122,10 @@ class ClassBasedViewTest(TestCase):
         cls.user = User.objects.create_user(username='tester2',
                                             email='jachkarta+tester@gmail.com',
                                             password='user123#')
+        cls.dummy_user = User.objects.create_user(username='tester3',
+                                                  email='jach.kar.ta@gmail.com',
+                                                  password='user123#'
+                                                  )
         for idea_id in range(1, num_ideas):
             if idea_id % 4 == 0:
                 Idea.objects.create(
@@ -247,7 +251,7 @@ class ClassBasedViewTest(TestCase):
         response = self.client.get('/idea/new/')
         self.assertEqual(response.status_code, 200)
 
-    def test_non_anonymous_idea_create_view_url_name_for_unauthenticated_user(self):
+    def test_non_anonymous_idea_create_view_url_name_for_authenticated_user(self):
         """Test url is accessible by name"""
         self.client.login(username=self.user.username, password='user123#')
         response = self.client.get(reverse('ideas:idea-create-non-anonymous'))
@@ -287,5 +291,165 @@ class ClassBasedViewTest(TestCase):
         })
         # Can't use assertRedirect since we are not sure about the redirected url
         self.assertEqual(response.status_code, 302)
+
+    #########################################################################################
+
+    """
+    For IdeaUpdateView, test
+        - unauthenticated users are redirected to login page
+        - for authenticated users
+            - anonymous idea can't be updated
+                - raise http error 403
+            - for non-anonymous ideas
+                    - permission error(http 403) is raised for non owners
+                    - only original conceivers(creaters) can
+                        - url is accessible by name
+                        - correct template is rendered
+                        - they can update their idea
+    """
+
+    def test_idea_update_view_for_unauthenticated_user(self):
+        """Test unauthenticated users are redirected to login page"""
+        # Non-anonymous ideas ids are indivisible by 4 and 10
+        slug = Idea.objects.get(id=5).slug
+        url_idea_update = reverse(
+            'ideas:idea-update', kwargs={'slug': slug})
+        response = self.client.get(url_idea_update)
+        self.assertRedirects(
+            response, expected_url=f'/login/?next=%2Fidea%2F{slug}%2Fupdate/')
+
+    def test_anonymous_ideas_update_view_for_authenticated_user(self):
+        """Test permission error for access by authenticated users for anonymous ideas"""
+        # All anonymous ideas ids are divisible by 4
+        idea = Idea.objects.get(id=4)
+        self.client.login(username=self.dummy_user.username,
+                          password='user123#')
+        url_idea_update = reverse(
+            'ideas:idea-update', kwargs={'slug': idea.slug})
+        response = self.client.get(url_idea_update)
+        self.assertEqual(response.status_code, 403)
+
+    def test_idea_update_view_for_nonconceiver(self):
+        """Test permission error is raised for non-owners(non-creator or non-conceivers)"""
+        slug = Idea.objects.get(id=5).slug
+        self.client.login(username=self.dummy_user.username,
+                          password='user123#')
+        url_idea_update = reverse(
+            'ideas:idea-update', kwargs={'slug': slug})
+        response = self.client.get(url_idea_update)
+        self.assertEqual(response.status_code, 403)
+
+    def test_non_anonymous_idea_update_view_url_name_for_conceiver(self):
+        """Test url is accessible by name"""
+        slug = Idea.objects.get(id=5).slug
+        url_idea_update = reverse(
+            'ideas:idea-update', kwargs={'slug': slug})
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_idea_update)
+        self.assertEqual(response.status_code, 200)
+
+    def test_non_anonymous_idea_update_view_template_for_conceiver(self):
+        """Test correct template is used while rendering"""
+        slug = Idea.objects.get(id=5).slug
+        url_idea_update = reverse(
+            'ideas:idea-update', kwargs={'slug': slug})
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_idea_update)
+        self.assertTemplateUsed(response, template_name='ideas/idea_form.html')
+
+    def test_update_non_anonymous_idea_by_conceiver(self):
+        """Test conceivers can update their ideas"""
+        slug = Idea.objects.get(id=5).slug
+        url_idea_update = reverse(
+            'ideas:idea-update', kwargs={'slug': slug})
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_idea_update)
+
+        response = self.client.post(url_idea_update, data={
+            'title': 'This is an updated idea',
+            'concept': 'Unit testing suddenly, seems too much work',
+            'user': self.user
+        })
+        # Can't use assertRedirect since we are not sure about the redirected url
+        self.assertEqual(response.status_code, 302)
+
+    #########################################################################################
+    """
+    For IdeaDeleteView, test
+        - unauthenticated users are redirected to login page
+        - for authenticated users
+            - anonymous idea can't be deleted
+                - raise http error 403
+            - for non-anonymous ideas
+                    - permission error(http 403) is raised for non owners(creators/conceivers)
+                    - only original conceivers(creaters) can
+                        - url is accessible by name
+                        - correct template is rendered
+                        - they can delete their idea and redirected to homepage
+    """
+
+    def test_idea_delete_view_for_unauthenticated_user(self):
+        """Test unauthenticated users are redirected to login page"""
+        # Non-anonymous ideas ids are indivisible by 4 and 10
+        slug = Idea.objects.get(id=5).slug
+        url_idea_delete = reverse(
+            'ideas:idea-delete', kwargs={'slug': slug})
+        response = self.client.get(url_idea_delete)
+        self.assertRedirects(
+            response, expected_url=f'/login/?next=%2Fidea%2F{slug}%2Fdelete/')
+
+    def test_anonymous_ideas_delete_view_for_authenticated_user(self):
+        """Test permission error for access by authenticated users for anonymous ideas"""
+        # All anonymous ideas ids are divisible by 4
+        idea = Idea.objects.get(id=4)
+        self.client.login(username=self.dummy_user.username,
+                          password='user123#')
+        url_idea_delete = reverse(
+            'ideas:idea-delete', kwargs={'slug': idea.slug})
+        response = self.client.get(url_idea_delete)
+        self.assertEqual(response.status_code, 403)
+
+    def test_idea_delete_view_for_nonconceiver(self):
+        """Test permission error is raised for non-owners(non-creator or non-conceivers)"""
+        slug = Idea.objects.get(id=5).slug
+        self.client.login(username=self.dummy_user.username,
+                          password='user123#')
+        url_idea_delete = reverse(
+            'ideas:idea-delete', kwargs={'slug': slug})
+        response = self.client.get(url_idea_delete)
+        self.assertEqual(response.status_code, 403)
+
+    def test_non_anonymous_idea_delete_view_url_name_for_conceiver(self):
+        """Test url is accessible by name"""
+        slug = Idea.objects.get(id=5).slug
+        url_idea_delete = reverse(
+            'ideas:idea-delete', kwargs={'slug': slug})
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_idea_delete)
+        self.assertEqual(response.status_code, 200)
+
+    def test_non_anonymous_idea_delete_view_template_for_conceiver(self):
+        """Test correct template is used while rendering"""
+        slug = Idea.objects.get(id=5).slug
+        url_idea_delete = reverse(
+            'ideas:idea-delete', kwargs={'slug': slug})
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_idea_delete)
+        self.assertTemplateUsed(
+            response, template_name='ideas/idea_confirm_delete.html')
+
+    def test_delete_non_anonymous_idea_by_conceiver(self):
+        """Test conceivers can update their ideas"""
+        slug = Idea.objects.get(id=5).slug
+        url_idea_delete = reverse(
+            'ideas:idea-delete', kwargs={'slug': slug})
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_idea_delete)
+
+        response = self.client.post(url_idea_delete)
+        self.assertRedirects(response, expected_url=reverse('ideas:home'))
+        # Ensure that the resource no longer exists
+        response = self.client.get(url_idea_delete)
+        self.assertEqual(response.status_code, 404)
 
     #########################################################################################
