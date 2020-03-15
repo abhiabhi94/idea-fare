@@ -49,6 +49,9 @@ class Idea(models.Model):
                 self.title + '-' +
                 secrets.token_urlsafe(LENGTH_OF_RANDOM_ALPHANUMERIC_SLUG)
             )
+        # Anonymous Ideas will always be public
+        if self.user is None:
+            self.visibility = True
 
         super(Idea, self).save(*args, **kwargs)
 

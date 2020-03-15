@@ -54,6 +54,16 @@ class IdeaModelTest(TestCase):
         idea = self.anonymous_idea
         self.assertEqual(idea.conceiver.username, 'anonymous')
 
+    def test_anonymous_ideas_visibility(self):
+        """Test whether anonymous ideas will always be public"""
+        idea = self.anonymous_idea
+        self.assertEqual(idea.visibility, True)
+
+    def test_conceiver_name_for_anonymous_idea(self):
+        """Test the name of the conceiver for anonymous idea"""
+        idea = self.anonymous_idea
+        self.assertEqual(str(idea.conceiver()), 'AnonymousUser')
+
     def test_conceiver_name_for_non_anonymous_idea(self):
         """Test the name of the conceiver for non anonymous idea"""
         idea = self.non_anonymous_idea

@@ -104,7 +104,7 @@ class Home(ListView):
     template_name = 'ideas/home.html'
     context_object_name = 'ideas'
     queryset = Idea.objects.filter(visibility=True).all()
-    paginate_by
+    paginate_by = paginate_by
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
@@ -129,7 +129,7 @@ class AnonymousIdeaCreateView(CreateView):
 
 
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
-class IdeaCreateView(LoginRequiredMixin, AnonymousIdeaCreateView):
+class NonAnonymousIdeaCreateView(LoginRequiredMixin, AnonymousIdeaCreateView):
     """Submit ideas non-anonymously"""
 
     fields = ['title', 'concept', 'visibility',
@@ -221,7 +221,7 @@ class ConceiverIdeaListView(ListView):
     template_name = 'ideas/conceiver_ideas.html'
     queryset = Idea.objects.all()
     context_object_name = 'ideas'
-    paginate_by
+    paginate_by = paginate_by
 
     def get_queryset(self):
         username = self.kwargs.get('username', None)

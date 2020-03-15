@@ -22,8 +22,6 @@ def process_idea_form(request, form):
         if request.user.is_authenticated:
             # For authenticated users
             form.instance.user = request.user
-    else:  # Anonymous ideas can't be made private
-        form.instance.visibility = True
 
     return form
 
