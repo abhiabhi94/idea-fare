@@ -5,6 +5,11 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
+MAX_TITLE_LENGTH = 60
+MAX_CONCEPT_LENGTH = 500
+MAX_SLUG_LENGTH = 80
+LENGTH_OF_RANDOM_ALPHANUMERIC_SLUG = 4
+
 AnonymousUser.username = 'anonymous'
 
 
@@ -12,14 +17,14 @@ class Idea(models.Model):
     # allow anonymous posting
     user = models.ForeignKey(User, blank=True, db_column='conceiver',
                              null=True, on_delete=models.CASCADE)
-    title = models.CharField(max_length=60,
+    title = models.CharField(max_length=MAX_TITLE_LENGTH,
                              help_text='Try to keep this short and sweet. Max 60 characters'
                              )
-    concept = models.CharField(max_length=500,
+    concept = models.CharField(max_length=MAX_CONCEPT_LENGTH,
                                help_text='Try to explain your idea in a concise form. Max 500 characters')
     date_created = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(default='', max_length=70)
+    slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name='public', default=True)
     # tags = models.
     _metadata = {
@@ -38,12 +43,11 @@ class Idea(models.Model):
         set the slug for the first time only
             - slugify the title with a random alphanumeric
         """
-        LENGTH_OF_RANDOM_ALPHANUMERIC = 4
 
         if self.date_updated is None:
             self.slug = slugify(
                 self.title + '-' +
-                secrets.token_urlsafe(LENGTH_OF_RANDOM_ALPHANUMERIC)
+                secrets.token_urlsafe(LENGTH_OF_RANDOM_ALPHANUMERIC_SLUG)
             )
 
         super(Idea, self).save(*args, **kwargs)
