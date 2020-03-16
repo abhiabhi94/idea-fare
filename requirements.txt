@@ -3,12 +3,17 @@ astroid==2.3.3
 autopep8==1.5
 Django==3.0.4
 django-admin==2.0.0
+django-comments-xtd==2.4.2
+django-contrib-comments==1.9.2
 django-crispy-forms==1.9.0
 django-debug-toolbar==2.2
 django-excel-response2==2.0.8
 django-meta==1.6.1
 django-six==1.0.4
+djangorestframework==3.11.0
 dnspython==1.16.0
+docutils==0.16
+feedparser==5.2.1
 idna==2.9
 isort==4.3.21
 lazy-object-proxy==1.4.3
