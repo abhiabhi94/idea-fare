@@ -9,6 +9,7 @@ django-excel-response2==2.0.8
 django-meta==1.6.1
 django-six==1.0.4
 dnspython==1.16.0
+feedparser==5.2.1
 idna==2.9
 isort==4.3.21
 lazy-object-proxy==1.4.3
