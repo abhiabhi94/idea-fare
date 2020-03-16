@@ -12,6 +12,8 @@ urlpatterns = [
 
 urlpatterns += [
     path('', include('ideas.urls')),
+    path('comments/', include('django_comments_xtd.urls')),
+
     path('register/', user_views.register, name='register'),
     path('profile/', user_views.profile, name='profile'),
     path('login/', auth_views.LoginView.as_view(
