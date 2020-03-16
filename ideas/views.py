@@ -148,7 +148,9 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
         """Allow only conceiver to view their idea if it's private"""
         idea = self.get_object()
         if not idea.visibility:
-            return self.request.user == idea.conceiver
+            if self.request.user == idea.conceiver:
+                return True
+            return PermissionDenied('You are not authorised to view this idea.')
         return True
 
 
@@ -256,7 +258,7 @@ class ConceiverIdeaListView(ListView):
         return context
 
 
-class LatestPostRSSFeed(Feed):
+class LatestIdeaRSSFeed(Feed):
     """"Publish the RSS feed for latest public ideas"""
     title = 'Latest ideas from IdeaFare'
     link = ''

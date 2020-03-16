@@ -40,7 +40,14 @@ def get_public_ideas(order='-date_created'):
 
 
 def email_verification(email):
-    """Verify whether an email is legit or not"""
+    """
+    `This feature works only when the Internet connection is alive`
+
+    Verify whether an email is legit or not
+
+    Returns
+        bool
+    """
     return validate_email(email_address=email, check_regex=True, check_mx=True)
 
 
@@ -48,6 +55,6 @@ def latest_entry(request):
     """
     Returns
         date: date-time
-            The date of the latest public idea posted.
+            The date time of the latest public idea posted.
     """
-    return Idea.objects.filter(visibility=True).latest('-date_created').date_created
+    return Idea.objects.filter(visibility=True).latest('date_created').date_created

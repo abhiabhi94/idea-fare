@@ -20,10 +20,10 @@ urlpatterns = [
          views.IdeaUpdateView.as_view(), name='idea-update'),
     path('idea/<slug:slug>/delete/',
          views.IdeaDeleteView.as_view(), name='idea-delete'),
-    path('conceiver/<str:username>/',
+    path('idea/conceiver/<str:username>/',
          views.ConceiverIdeaListView.as_view(), name='conceiver-ideas'),
     path('subscription/', views.subscribe, name='subscription'),
     path('latest/rss-feed/',
-         condition(last_modified_func=latest_entry)(views.LatestPostRSSFeed()),
+         condition(last_modified_func=latest_entry)(views.LatestIdeaRSSFeed()),
          name='rss-feed'),
 ]

@@ -1,6 +1,8 @@
+import feedparser
 from django.test import TestCase
 from django.shortcuts import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
+from django.conf import settings
 from ideas.models import Idea
 
 
@@ -453,3 +455,173 @@ class ClassBasedViewTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     #########################################################################################
+
+    """
+    For IdeaDetailView, test
+        - correct template is used for rendering
+        - for public ideas
+            - url is accessible to everyone
+        - private ideas 
+            - url are only accessible to conceivers
+            - for others throw a permission error 
+    """
+
+    def test_idea_detail_view_template(self):
+        """Test correct template is used while rendering"""
+        url_idea_detail = Idea.objects.get(id=5).get_absolute_url()
+        response = self.client.get(url_idea_detail)
+        self.assertTemplateUsed(
+            response, template_name='ideas/idea_details.html')
+
+    def test_public_idea_detail_view_url_by_name(self):
+        """Test correct template is used while rendering"""
+        slug = Idea.objects.get(id=5).slug
+        url_idea_detail = reverse('ideas:idea-details', kwargs={'slug': slug})
+        response = self.client.get(url_idea_detail)
+        self.assertEqual(response.status_code, 200)
+
+    def test_private_idea_detail_view_url_for_nonconceiver(self):
+        """Test whether permission error is raised or not"""
+        # idea with id 10 is private
+        url_idea_detail = Idea.objects.get(id=10).get_absolute_url()
+        response = self.client.get(url_idea_detail)
+        self.assertTrue(response.status_code, 403)
+
+    def test_private_idea_detail_view_url_for_conceiver(self):
+        """Test whether conceivers can access their private idea"""
+        # idea with id 10 is private
+        url_idea_detail = Idea.objects.get(id=10).get_absolute_url()
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_idea_detail)
+        self.assertTrue(response.status_code, 200)
+
+    #############################################################################
+
+    """
+    For ConceiverIdeaListView, test
+        - url is accessible by name
+        - correct template is used for rendering
+        - for anonymous ideas(username=anonymous), all such ideas are shown
+        - for non-anonymous users, all of their public ideas are shown
+        - for non-anonymous users, none of their private idea is shown
+        - for authenticated users, their private idea is shown 
+    """
+
+    def test_conceiver_idea_list_view_url_by_name(self):
+        """Test url is accessible by name"""
+        url_conceiver_idea = reverse(
+            'ideas:conceiver-ideas', kwargs={'username': self.user.username})
+        response = self.client.get(url_conceiver_idea)
+        self.assertEqual(response.status_code, 200)
+
+    def test_conceiver_idea_list_view_url_template(self):
+        """Test correct template is used for rendering"""
+        url_conceiver_idea = reverse(
+            'ideas:conceiver-ideas', kwargs={'username': self.user.username})
+        response = self.client.get(url_conceiver_idea)
+        self.assertTemplateUsed(
+            response, template_name='ideas/conceiver_ideas.html')
+
+    def test_conceiver_idea_list_view_for_anonymous_idea(self):
+        """Test all anonymous ideas are shown"""
+        url_conceiver_idea = reverse(
+            'ideas:conceiver-ideas', kwargs={'username': AnonymousUser.username})
+        response = self.client.get(url_conceiver_idea)
+        # Ideas with id -> (4, 8, 12, 16, 20, 24) are anonymous
+        self.assertEqual(len(response.context['ideas']), 6)
+
+    def test_conceiver_idea_list_view_for_private_idea(self):
+        """Test privates ideas are shown only to conceivers"""
+        url_conceiver_idea = reverse(
+            'ideas:conceiver-ideas', kwargs={'username': self.user.username})
+        self.client.login(username=self.user.username, password='user123#')
+        response = self.client.get(url_conceiver_idea)
+        # Idea with id -> (10) is anonymous
+        idea = Idea.objects.get(id=10)
+        # idea is present in context
+        self.assertEqual(idea in response.context['ideas'], True)
+        # all private ideas are shown
+        self.assertEqual(len(response.context['ideas']), 15)
+
+    def test_conceiver_idea_list_view_for_public_idea_pagination(self):
+        """Test all public ideas are shown and the view is paginated"""
+        url_conceiver_idea = reverse(
+            'ideas:conceiver-ideas', kwargs={'username': self.user.username})
+        response = self.client.get(url_conceiver_idea)
+        # There are 17 public ideas, see setUpTestData function for more information
+        self.assertEqual('is_paginated' in response.context, True)
+        self.assertEqual(response.context['is_paginated'], True)
+        self.assertEqual(len(response.context['ideas']), 15)
+
+    ####################################################################################
+
+    """
+    For LatestIdeaRSSFeed, test
+        - url is accessible by name
+        - feed is in correct format
+        - feed uses the last_modified functionality(used for caching)
+        - each item contains
+            - title
+            - description
+            - author's name
+            - link
+    """
+
+    def test_latest_post_rss_feed_url_by_name(self):
+        """Test the url by name"""
+        response = self.client.get(reverse('ideas:rss-feed'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_latest_post_rss_feed_format(self):
+        """Test the format of the feed"""
+        url_rss_feed = reverse('ideas:rss-feed')
+        response = self.client.get(url_rss_feed)
+        feed = feedparser.parse(response.content)
+        # 1 indicates feed is not in a correct format
+        self.assertEqual(feed['bozo'], 0)
+
+    def test_latest_post_rss_feed_last_modified(self):
+        """Test the last_modified property of the feed"""
+        url_rss_feed = reverse('ideas:rss-feed')
+        response = self.client.get(url_rss_feed)
+        last_modified = response._headers.get('last-modified', None)
+        self.assertNotEqual(last_modified, None)
+
+    def test_latest_post_rss_feed_item_number(self):
+        """Test all the public ideas are present: 23(24(total) - 1(private))"""
+        url_rss_feed = reverse('ideas:rss-feed')
+        response = self.client.get(url_rss_feed)
+        feed = feedparser.parse(response.content)
+        self.assertEqual(len(feed['items']), 23)
+
+    def test_latest_post_rss_feed_item_title(self):
+        """Test each item contains title"""
+        url_rss_feed = reverse('ideas:rss-feed')
+        response = self.client.get(url_rss_feed)
+        feed = feedparser.parse(response.content)
+        title = feed['items'][0].title
+        self.assertNotEqual(title, '')
+
+    def test_latest_post_rss_feed_item_description(self):
+        """Test each item contains description"""
+        url_rss_feed = reverse('ideas:rss-feed')
+        response = self.client.get(url_rss_feed)
+        feed = feedparser.parse(response.content)
+        description = feed['items'][0].description
+        self.assertNotEqual(description, '')
+
+    def test_latest_post_rss_feed_item_author_name(self):
+        """Test each item contains author name"""
+        url_rss_feed = reverse('ideas:rss-feed')
+        response = self.client.get(url_rss_feed)
+        feed = feedparser.parse(response.content)
+        author = feed['items'][0].author
+        self.assertNotEqual(author, '')
+
+    def test_latest_post_rss_feed_item_link(self):
+        """Test each item contains link"""
+        url_rss_feed = reverse('ideas:rss-feed')
+        response = self.client.get(url_rss_feed)
+        feed = feedparser.parse(response.content)
+        link = feed['items'][0].link
+        self.assertNotEqual(link, '')
