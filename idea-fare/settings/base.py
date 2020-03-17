@@ -120,11 +120,20 @@ CONTACT_EMAIL = os.environ.get('EMAIL_USER').replace('@', '+contact@')
 
 #####################   django-comments-xtd ###########################
 COMMENTS_APP = 'django_comments_xtd'
-COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+COMMENTS_XTD_MAX_THREAD_LEVEL = 20
+COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order')
 COMMENTS_XTD_CONFIRM_EMAIL = True
 #  To help obfuscating comments before they are sent for confirmation.
 COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
                      b"Aequam memento rebus in arduis servare mentem.")
+
+COMMENTS_XTD_APP_MODEL_OPTIONS = {
+    'ideas.idea': {
+        'allow_flagging': True,
+        'allow_feedback': True,
+        'show_feedback': True,
+    }
+}
 
 # Source mail address used for notifications.
 COMMENTS_XTD_FROM_EMAIL = os.environ.get('EMAIL_USER')
