@@ -25,10 +25,13 @@ INSTALLED_APPS = [
     ##############################
     'meta',
     'crispy_forms',
+    'django_comments_xtd',
+    'django_comments',
     ################################
     'users',
     'ideas',
     'subscribers',
+    ################################
 ]
 
 MIDDLEWARE = [
@@ -46,7 +49,9 @@ ROOT_URLCONF = '{}.urls'.format(project_name)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -102,10 +107,27 @@ EMAIL_USE_TLS = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# for usingt the sites framework
+# for using the sites framework
 SITE_ID = 1
 
 ### Used by Django-Meta app for rendering meta tags ###
 META_SITE_DOMAIN = ''
 META_SITE_PROTOCOL = 'http'
 ##########################################
+
+# Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
+CONTACT_EMAIL = os.environ.get('EMAIL_USER').replace('@', '+contact@')
+
+#####################   django-comments-xtd ###########################
+COMMENTS_APP = 'django_comments_xtd'
+COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+COMMENTS_XTD_CONFIRM_EMAIL = True
+#  To help obfuscating comments before they are sent for confirmation.
+COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
+                     b"Aequam memento rebus in arduis servare mentem.")
+
+# Source mail address used for notifications.
+COMMENTS_XTD_FROM_EMAIL = os.environ.get('EMAIL_USER')
+# Contact mail address to show in messages.
+COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
+##########################################################################
