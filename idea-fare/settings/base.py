@@ -107,7 +107,7 @@ EMAIL_USE_TLS = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# for usingt the sites framework
+# for using the sites framework
 SITE_ID = 1
 
 ### Used by Django-Meta app for rendering meta tags ###
@@ -120,7 +120,7 @@ CONTACT_EMAIL = os.environ.get('EMAIL_USER').replace('@', '+contact@')
 
 #####################   django-comments-xtd ###########################
 COMMENTS_APP = 'django_comments_xtd'
-COMMENTS_XTD_MAX_THREAD_LEVEL = 0
+COMMENTS_XTD_MAX_THREAD_LEVEL = 2
 COMMENTS_XTD_CONFIRM_EMAIL = True
 #  To help obfuscating comments before they are sent for confirmation.
 COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
