@@ -14,7 +14,7 @@ class CleanUserDetailsMixin:
     def clean_email(self):
         """
         Returns
-            email address in lower case if email is unique
+            email address in lower case if email is valid and unique
             error message in case it isn't.
         """
         email = self.cleaned_data.get('email').lower()
