@@ -136,7 +136,7 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
 EMAIL_HOST_USER = email_host_user
 EMAIL_HOST_PASSWORD = email_host_pass
 
-if EMAIL_HOST_PASSWORD is not None: 
+if EMAIL_HOST_USER is not None: 
     # Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
     CONTACT_EMAIL = EMAIL_HOST_USER.replace('@', '+contact@')
     # Source mail address used for notifications.
