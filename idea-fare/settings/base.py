@@ -4,7 +4,7 @@ import sys
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
-from setup.setup import project_name  # nopep8
+from setup.setup import project_name, email_host_user, email_host_pass   # nopep8
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(
@@ -113,22 +113,34 @@ SITE_ID = 1
 ### Used by Django-Meta app for rendering meta tags ###
 META_SITE_DOMAIN = ''
 META_SITE_PROTOCOL = 'http'
-##########################################
-
-# Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
-CONTACT_EMAIL = os.environ.get('EMAIL_USER').replace('@', '+contact@')
+#########################################
 
 #####################   django-comments-xtd ###########################
 COMMENTS_APP = 'django_comments_xtd'
+COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order')
 COMMENTS_XTD_FORM_CLASS = 'ideas.forms.CommentForm'
-COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+COMMENTS_XTD_MAX_THREAD_LEVEL = 20
 COMMENTS_XTD_CONFIRM_EMAIL = True
 #  To help obfuscating comments before they are sent for confirmation.
 COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
                      b"Aequam memento rebus in arduis servare mentem.")
 
-# Source mail address used for notifications.
-COMMENTS_XTD_FROM_EMAIL = os.environ.get('EMAIL_USER')
-# Contact mail address to show in messages.
-COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
+COMMENTS_XTD_APP_MODEL_OPTIONS = {
+    'ideas.idea': {
+        'allow_flagging': True,
+        'allow_feedback': True,
+        'show_feedback': True,
+    }
+}
+
+
+if email_host_user is not None: 
+    EMAIL_HOST_USER = email_host_user
+    EMAIL_HOST_PASSWORD = email_host_pass
+    # Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
+    CONTACT_EMAIL = EMAIL_HOST_USER.replace('@', '+contact@')
+    # Source mail address used for notifications.
+    COMMENTS_XTD_FROM_EMAIL = EMAIL_HOST_USER
+    # Contact mail address to show in messages.
+    COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
 ##########################################################################

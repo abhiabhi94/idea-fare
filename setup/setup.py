@@ -16,6 +16,6 @@ if secret_key is None:
 email_host_user = os.getenv('EMAIL_USER', None)
 email_host_pass = os.getenv('EMAIL_PASS', None)
 if email_host_user is None or email_host_pass is None:
-    print('You will not be able to send any emails using this project')
+    print('Warning: You will not be able to send any emails using this project')
 
 prod_flag = os.getenv('PROD', None)

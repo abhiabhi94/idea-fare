@@ -1,6 +1,8 @@
 {% extends "ideas/base.html" %}
 {% load static %}
 {% load comments %}
+{% load comments_xtd %}
+
 
 {% block content %}
 
@@ -50,20 +52,18 @@
   ha{{ comment_count|pluralize:"s,ve" }} been posted.
 </div>
 
-{% if comment_count %}
-<hr/>
-<div class="comments">
-  {% render_comment_list for idea %}
-</div>
-{% endif %}
-
-
 <div class="card card-block mb-5">
   <div class="card-body">
     <h4 class="card-title text-center pb-3">Post your comment</h4>
       {% render_comment_form for idea %}
   </div>
 </div>
+
+{% if comment_count %}
+<ul class="media-list">
+  {% render_xtdcomment_tree for idea allow_flagging allow_feedback show_feedback %}
+</ul>
+{% endif %}
 {% comment %} END COMMENTS {% endcomment %}
 {% endblock content %}
 
