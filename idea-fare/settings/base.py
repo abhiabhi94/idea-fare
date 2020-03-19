@@ -138,9 +138,10 @@ EMAIL_HOST_PASSWORD = email_host_pass
 
 EMAIL = os.environ.get('EMAIL_USER', None)
 # Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
-if EMAIL is not None: CONTACT_EMAIL = EMAIL.replace('@', '+contact@')
-# Source mail address used for notifications.
-COMMENTS_XTD_FROM_EMAIL = EMAIL
-# Contact mail address to show in messages.
-COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
+if EMAIL is not None: 
+    CONTACT_EMAIL = EMAIL.replace('@', '+contact@')
+    # Source mail address used for notifications.
+    COMMENTS_XTD_FROM_EMAIL = EMAIL
+    # Contact mail address to show in messages.
+    COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
 ##########################################################################
