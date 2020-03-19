@@ -140,7 +140,7 @@ if EMAIL_HOST_PASSWORD is not None:
     # Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
     CONTACT_EMAIL = EMAIL_HOST_PASSWORD.replace('@', '+contact@')
     # Source mail address used for notifications.
-    COMMENTS_XTD_FROM_EMAIL = EMAIL_HOST_PASSWORD
+    COMMENTS_XTD_FROM_EMAIL = EMAIL_HOST_USER
     # Contact mail address to show in messages.
     COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
 ##########################################################################
