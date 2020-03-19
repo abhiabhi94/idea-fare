@@ -12,8 +12,6 @@ else:  # development
     from .dev import *
 
 SECRET_KEY = secret_key
-EMAIL_HOST_USER = email_host_user
-EMAIL_HOST_PASSWORD = email_host_pass
 
 ##### For MySQL use this ########################
 

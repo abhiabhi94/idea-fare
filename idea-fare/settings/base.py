@@ -4,7 +4,7 @@ import sys
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
-from setup.setup import project_name  # nopep8
+from setup.setup import project_name, email_host_user, email_host_pass   # nopep8
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(
@@ -113,10 +113,7 @@ SITE_ID = 1
 ### Used by Django-Meta app for rendering meta tags ###
 META_SITE_DOMAIN = ''
 META_SITE_PROTOCOL = 'http'
-##########################################
-
-# Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
-CONTACT_EMAIL = os.environ.get('EMAIL_USER').replace('@', '+contact@')
+#########################################
 
 #####################   django-comments-xtd ###########################
 COMMENTS_APP = 'django_comments_xtd'
@@ -136,8 +133,14 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
     }
 }
 
+EMAIL_HOST_USER = email_host_user
+EMAIL_HOST_PASSWORD = email_host_pass
+
+EMAIL = os.environ.get('EMAIL_USER', None)
+# Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
+if EMAIL is not None: CONTACT_EMAIL = EMAIL.replace('@', '+contact@')
 # Source mail address used for notifications.
-COMMENTS_XTD_FROM_EMAIL = os.environ.get('EMAIL_USER')
+COMMENTS_XTD_FROM_EMAIL = EMAIL
 # Contact mail address to show in messages.
 COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
 ##########################################################################
