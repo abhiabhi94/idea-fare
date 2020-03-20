@@ -1,5 +1,4 @@
 {% load cool_timesince %}
-{% load comments %}
 <div class="idea-list">
     <div class="card-group">
     {% for idea in ideas %}
@@ -22,11 +21,8 @@
                 <div class="card-footer">
                     <div class="idea-metadata">
                         {% include "ideas/idea_conceiver.html" %}
-                        {% get_comment_count for idea as comment_count %}
                         <small class="mr-2 text-muted"
                             title="{{ idea.date_created|date:" j M Y " }}">{{ idea.date_created|cool_timesince }}</small>
-                        <small class="mr-2 text-muted"
-                            title="Comment count">{{ comment_count }} comment{{ comment_count|pluralize }}</small>
                     </div>
                 </div>
             </div>
