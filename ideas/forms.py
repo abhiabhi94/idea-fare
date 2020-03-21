@@ -1,12 +1,19 @@
-from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django_comments_xtd.forms import XtdCommentForm
-from django_comments_xtd.models import TmpXtdComment
+from django import forms
+from fluent_comments.forms import FluentCommentForm
+from fluent_comments.models import FluentComment
 from ideas.manager import email_verification
 
 
-class CommentForm(XtdCommentForm):
-    """Adds email verification to django_comments_xtd"""
+class CommentForm(FluentCommentForm):
+    """Adds email verification to django_fluent_comments"""
+
+    class Meta:
+        model = FluentComment
+        fields = ['name', 'email', 'comment']
+
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
         """

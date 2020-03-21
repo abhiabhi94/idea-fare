@@ -25,8 +25,9 @@ INSTALLED_APPS = [
     ##############################
     'meta',
     'crispy_forms',
-    'django_comments_xtd',
+    'fluent_comments',
     'django_comments',
+    'threadedcomments',
     ################################
     'taggit',
     'taggit_autosuggest',
@@ -113,43 +114,26 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # for using the sites framework
 SITE_ID = 1
 
-### Used by Django-Meta app for rendering meta tags ###
+############## Used by Django-Meta app for rendering meta tags #############
 META_SITE_DOMAIN = ''
 META_SITE_PROTOCOL = 'http'
-#########################################
+################################################################
 
-#####################   django-comments-xtd ###########################
-COMMENTS_APP = 'django_comments_xtd'
-COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order')
-COMMENTS_XTD_FORM_CLASS = 'ideas.forms.CommentForm'
-COMMENTS_XTD_MAX_THREAD_LEVEL = 20
-COMMENTS_XTD_CONFIRM_EMAIL = True
-#  To help obfuscating comments before they are sent for confirmation.
-COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
-                     b"Aequam memento rebus in arduis servare mentem.")
-
-COMMENTS_XTD_APP_MODEL_OPTIONS = {
-    'ideas.idea': {
-        'allow_flagging': True,
-        'allow_feedback': True,
-        'show_feedback': True,
-    }
-}
-
-
-if email_host_user is not None: 
+# set up variables to be used for sending emails
+if email_host_user is not None:
     EMAIL_HOST_USER = email_host_user
     EMAIL_HOST_PASSWORD = email_host_pass
-    # Add '+contact' to email...for e.g source@example.com -> source+contact@example.com
-    CONTACT_EMAIL = EMAIL_HOST_USER.replace('@', '+contact@')
-    # Source mail address used for notifications.
-    COMMENTS_XTD_FROM_EMAIL = EMAIL_HOST_USER
-    # Contact mail address to show in messages.
-    COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
+
 ##########################################################################
 
+############# django_fluent_comments######################################
+COMMENTS_APP = 'fluent_comments'
+FLUENT_COMMENTS_FORM_CLASS = 'ideas.forms.CommentForm'
+FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title')
 
-# Django-taggit
+###############################################################################
+
+################ Django-taggit############################
 TAGGIT_CASE_INSENSITIVE = True
 
-##########################################
+##############################################################################
