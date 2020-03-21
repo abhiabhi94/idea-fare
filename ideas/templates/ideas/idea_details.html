@@ -40,7 +40,7 @@
                 <div class="idea-content mt-4">{{ idea.concept|linebreaks }}</div>
                 {% comment %} {% include "tags.html" with tags=post.get_tags_list %} {% endcomment %}
                 <div class="idea-comments">
-                    Comments<hr>
+                    <legend>Comments</legend><hr>
                     {% render_comment_list for idea %}
                     {% render_comment_form for idea %}
                 </div>
