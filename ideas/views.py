@@ -24,6 +24,8 @@ from ideas.manager import (email_verification,
                            process_idea_form
                            )
 from subscribers.models import Subscriber
+from taggit.models import Tag
+
 
 global paginate_by
 paginate_by = 15
@@ -118,9 +120,7 @@ class AnonymousIdeaCreateView(CreateView):
     template_name = 'ideas/idea_form.html'
     context_object_name = 'idea'
     model = Idea
-    fields = ['title', 'concept',
-              #   'tags'
-              ]
+    fields = ['title', 'concept', 'tags']
 
     def form_valid(self, form):
         """For a valid form, check if the user wants the idea to be anonymous."""
@@ -132,9 +132,7 @@ class AnonymousIdeaCreateView(CreateView):
 class NonAnonymousIdeaCreateView(LoginRequiredMixin, AnonymousIdeaCreateView):
     """Submit ideas non-anonymously"""
 
-    fields = ['title', 'concept', 'visibility',
-              #   'tags'
-              ]
+    fields = ['title', 'concept', 'tags', 'visibility']
 
 
 @method_decorator(require_http_methods(['GET']), name='dispatch')
@@ -158,9 +156,7 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
 class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Allows only conceivers to update their idea"""
     model = Idea
-    fields = ['title', 'concept', 'visibility'
-              #   'tags',
-              ]
+    fields = ['title', 'concept', 'visibility', 'tags']
 
     def form_valid(self, form):
         """Check whether the user logged in is the one updating the idea."""
@@ -171,7 +167,7 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.request, 'Your idea has been successfully updated.')
         else:
             messages.warning(
-                self.request, 'You are not allowed to tinker with this idea.')
+                self.request, 'You are not allowed to update this idea.')
             return redirect('idea:home')
 
         return super().form_valid(form)
@@ -191,9 +187,7 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class IdeaDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """Allow only conceivers to delete their idea and give a successfull message upon completion"""
     model = Idea
-    fields = ['title', 'concept', 'visibility'
-              # 'tags'
-              ]
+    fields = ['title', 'concept', 'visibility', 'tags']
     context_object_name = 'idea'
     success_url = reverse_lazy('ideas:home')
     success_message = 'Idea {} was removed successfully'
@@ -257,6 +251,31 @@ class ConceiverIdeaListView(ListView):
                                keywords=meta_home.keywords)
         return context
 
+@method_decorator(require_http_methods(['GET']), name='dispatch')
+class TaggedIdeaListView(ListView):
+    # model = Idea
+    template_name = 'ideas/idea_tagged.html'   # <app>/<model>_<viewtype>.html
+    context_object_name = 'ideas'
+
+    def get_queryset(self):
+        idea_list = Idea.objects.all().filter(
+            tags__slug=self.kwargs.get('slug').lower())
+        if idea_list:
+            return idea_list
+        raise Http404('Tag not present')
+
+    # ordering = ['-date_published']
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug').lower()
+        tag = get_object_or_404(Tag, slug=slug).name
+        context['meta'] = Meta(title=f'About | IdeaFare',
+                           description=f'Know a bit about the concept and the idea behind the IdeaFare',
+                           keywords=meta_home.keywords + [tag])                               
+        context['tag'] = tag
+        return context
 
 class LatestIdeaRSSFeed(Feed):
     """"Publish the RSS feed for latest public ideas"""

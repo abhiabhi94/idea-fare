@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from taggit_autosuggest.managers import TaggableManager
 
 MAX_TITLE_LENGTH = 60
 MAX_CONCEPT_LENGTH = 500
@@ -26,6 +27,7 @@ class Idea(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name='public', default=True)
+    tags = TaggableManager()
     # tags = models.
     _metadata = {
         'title': 'title',
@@ -73,3 +75,6 @@ class Idea(models.Model):
 
     def get_absolute_url(self):
         return reverse('ideas:idea-details', kwargs={'slug': self.slug})
+
+    def get_tags_list(self):
+        return self.tags.all()

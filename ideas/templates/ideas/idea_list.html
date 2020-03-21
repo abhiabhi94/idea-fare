@@ -19,6 +19,9 @@
                         </p>
                     </div>
                 </div>
+                <div class="tags">
+                    {% include "tags.html" with tags=idea.get_tags_list %}
+                </div>
                 <div class="card-footer">
                     <div class="idea-metadata">
                         {% include "ideas/idea_conceiver.html" %}

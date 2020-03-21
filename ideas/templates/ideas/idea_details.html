@@ -29,7 +29,7 @@
                         <div id="post-options">
                             <a class="btn btn-secondary btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-update' idea.slug %}"
-                                title="Tinker">Tinker</a>
+                                title="Update">Update</a>
                             <a class="btn btn-danger btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-delete' idea.slug %}"
                                 title="Delete">Delete</a>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="idea-content mt-4">{{ idea.concept }}</div>
-                {% comment %} {% include "tags.html" with tags=post.get_tags_list %} {% endcomment %}
+                {% include "tags.html" with tags=idea.get_tags_list %}
             </div>
         </article>
     </div>

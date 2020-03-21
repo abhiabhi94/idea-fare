@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'django_comments_xtd',
     'django_comments',
     ################################
+    'taggit',
+    'taggit_autosuggest',
+    ################################
     'users',
     'ideas',
     'subscribers',
@@ -144,3 +147,9 @@ if email_host_user is not None:
     # Contact mail address to show in messages.
     COMMENTS_XTD_CONTACT_EMAIL = CONTACT_EMAIL
 ##########################################################################
+
+
+# Django-taggit
+TAGGIT_CASE_INSENSITIVE = True
+
+##########################################
