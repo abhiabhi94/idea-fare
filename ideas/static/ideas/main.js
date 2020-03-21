@@ -1,5 +1,6 @@
 'use strict';
-
+// $ is not available as it is.
+$ = $ || django.jQuery
 $(document).ready(function(event) {
     $('.subForm').submit(subscribe);
     $('.copy').on('click', function(event) {
@@ -32,7 +33,7 @@ $(document).ready(function(event) {
  */
 function subscribe(event) {
     const responseDiv = $('#sub-response');
-    const email = $('#email').val();
+    const email = $('#email');
     responseDiv.html('Registering ' + email + ' with HackAdda!');
     const url = $(this)[0].action;
     const data = $(this).serialize;
