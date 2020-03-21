@@ -37,14 +37,25 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="idea-content mt-4">{{ idea.concept }}</div>
+                <div class="idea-content mt-4">
+                    {{ idea.concept|linebreaks }}
+                </div>
                 {% include "tags.html" with tags=idea.get_tags_list %}
-                <div class="idea-content mt-4">{{ idea.concept|linebreaks }}</div>
-                {% comment %} {% include "tags.html" with tags=post.get_tags_list %} {% endcomment %}
                 <div class="idea-comments">
-                    <legend>Comments</legend><hr>
-                    {% render_comment_list for idea %}
-                    {% render_comment_form for idea %}
+                    {% get_comment_count for idea as comment_count %}
+                    <div class="py-3 text-center">
+                        <a href="{% url 'ideas:home' %}">Return Home</a>
+                        &nbsp;&sdot;&nbsp;
+                        {{ comment_count }} comment{{ comment_count|pluralize }}
+                        ha{{ comment_count|pluralize:"s,ve" }} been posted.
+                    </div>
+
+                    <div class="idea-comment-list">
+                        {% render_comment_list for idea %}
+                    <div class="idea-comment-form">
+                        <h4 class="card-title text-center pb-3">Post your comment</h4>
+                        {% render_comment_form for idea %}
+                    </div>
                 </div>
             </div>
         </article>

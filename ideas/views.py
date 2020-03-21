@@ -251,10 +251,10 @@ class ConceiverIdeaListView(ListView):
                                keywords=meta_home.keywords)
         return context
 
+
 @method_decorator(require_http_methods(['GET']), name='dispatch')
 class TaggedIdeaListView(ListView):
-    # model = Idea
-    template_name = 'ideas/idea_tagged.html'   # <app>/<model>_<viewtype>.html
+    template_name = 'ideas/idea_tagged.html'
     context_object_name = 'ideas'
 
     def get_queryset(self):
@@ -264,18 +264,18 @@ class TaggedIdeaListView(ListView):
             return idea_list
         raise Http404('Tag not present')
 
-    # ordering = ['-date_published']
-    paginate_by = 10
+    paginate_by = paginate_by
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         slug = self.kwargs.get('slug').lower()
         tag = get_object_or_404(Tag, slug=slug).name
         context['meta'] = Meta(title=f'About | IdeaFare',
-                           description=f'Know a bit about the concept and the idea behind the IdeaFare',
-                           keywords=meta_home.keywords + [tag])                               
+                               description=f'Ideas with the tag {tag}',
+                               keywords=meta_home.keywords + [tag])
         context['tag'] = tag
         return context
+
 
 class LatestIdeaRSSFeed(Feed):
     """"Publish the RSS feed for latest public ideas"""

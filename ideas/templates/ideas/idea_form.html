@@ -7,6 +7,7 @@
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Post an Idea</legend>
+            {{ form.media }}
             {{ form|crispy }}
         </fieldset>
         <div class="form-group">

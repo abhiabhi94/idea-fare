@@ -1,1 +1,4 @@
-{% include "ideas/home.html" %}
+{% extends "ideas/home.html" %}
+{% block heading %}
+<legend>Ideas with the tag <span class="idea-tag">{{ tag }}</span></legend>
+{% endblock heading %}
