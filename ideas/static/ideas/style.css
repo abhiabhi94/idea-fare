@@ -77,6 +77,18 @@ a.dropdown-toggle {
 /* to be used for errors */
 
 .invalid-feedback {
+    display: block!important;
     font-size: 80%;
     color: #dc3545;
+}
+
+.idea-comments {
+    border: 1px solid #efefef;
+    width: 100%;
+    padding: 1rem;
+    background: #dadada;
+}
+
+.comment-list-wrapper {
+    border-bottom: 2px dotted #b3b3b3;
 }
