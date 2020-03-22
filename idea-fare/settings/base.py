@@ -28,9 +28,7 @@ INSTALLED_APPS = [
     'fluent_comments',
     'django_comments',
     'threadedcomments',
-    ################################
     'taggit',
-    'taggit_autosuggest',
     ################################
     'users',
     'ideas',

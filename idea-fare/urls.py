@@ -51,10 +51,6 @@ urlpatterns += [
     #      ),
 ]
 
-urlpatterns += [
-    path('taggit_autosuggest/', include('taggit_autosuggest.urls')),
-]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
