@@ -18,13 +18,15 @@ from django.http.response import HttpResponseBadRequest, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.db.utils import IntegrityError
 from meta.views import Meta
+from taggit.models import Tag
 from ideas.models import Idea
 from ideas.manager import (email_verification,
                            get_public_ideas,
                            process_idea_form
                            )
 from subscribers.models import Subscriber
-from taggit.models import Tag
+from ideas.forms import (AnonymousIdeaCreateForm,
+                         NonAnonymousIdeaCreateForm)
 
 
 global paginate_by
@@ -117,10 +119,10 @@ class Home(ListView):
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
 class AnonymousIdeaCreateView(CreateView):
     """Submit ideas anonymously"""
+    form_class = AnonymousIdeaCreateForm
+    model = Idea
     template_name = 'ideas/idea_form.html'
     context_object_name = 'idea'
-    model = Idea
-    fields = ['title', 'concept', 'tags']
 
     def form_valid(self, form):
         """For a valid form, check if the user wants the idea to be anonymous."""
@@ -131,8 +133,7 @@ class AnonymousIdeaCreateView(CreateView):
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
 class NonAnonymousIdeaCreateView(LoginRequiredMixin, AnonymousIdeaCreateView):
     """Submit ideas non-anonymously"""
-
-    fields = ['title', 'concept', 'tags', 'visibility']
+    form_class = NonAnonymousIdeaCreateForm
 
 
 @method_decorator(require_http_methods(['GET']), name='dispatch')
@@ -156,7 +157,7 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
 class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Allows only conceivers to update their idea"""
     model = Idea
-    fields = ['title', 'concept', 'visibility', 'tags']
+    form_class = NonAnonymousIdeaCreateForm
 
     def form_valid(self, form):
         """Check whether the user logged in is the one updating the idea."""
@@ -187,7 +188,6 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class IdeaDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """Allow only conceivers to delete their idea and give a successfull message upon completion"""
     model = Idea
-    fields = ['title', 'concept', 'visibility', 'tags']
     context_object_name = 'idea'
     success_url = reverse_lazy('ideas:home')
     success_message = 'Idea {} was removed successfully'

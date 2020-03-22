@@ -1,8 +1,39 @@
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+from django.forms import ModelForm, Textarea
 from fluent_comments.forms import FluentCommentForm
 from fluent_comments.models import FluentComment
 from ideas.manager import email_verification
+from ideas.models import Idea
+
+"""
+TODO:
+    Both AnonymousIdeaCreateForm and NonAnonymousIdeaCreateForm have\
+    a lot of code that is common, only the field inside the Meta class\
+    is different. In an ideal world, we would want to have a mixing and\
+    use the mixin in both the forms by just overriding the fields.
+"""
+
+
+class AnonymousIdeaCreateForm(ModelForm):
+    """Form for anonymous users"""
+
+    class Meta:
+        model = Idea
+        fields = ['title', 'concept', 'tags']
+        widgets = {
+            'concept': Textarea(attrs={'col': 80, 'row': 20})
+        }
+
+
+class NonAnonymousIdeaCreateForm(ModelForm):
+    """Form for authenticated users"""
+
+    class Meta:
+        model = Idea
+        fields = ['title', 'concept', 'tags', 'visibility']
+        widgets = {
+            'concept': Textarea(attrs={'col': 80, 'row': 20})
+        }
 
 
 class CommentForm(FluentCommentForm):
