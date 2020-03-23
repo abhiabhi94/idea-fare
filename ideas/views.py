@@ -19,6 +19,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.utils import IntegrityError
 from meta.views import Meta
 from taggit.models import Tag
+from dal import autocomplete
 from ideas.models import Idea
 from ideas.manager import (email_verification,
                            get_public_ideas,
@@ -276,6 +277,16 @@ class TaggedIdeaListView(ListView):
         context['tag'] = tag
         return context
 
+@method_decorator(require_http_methods(['GET']), name='dispatch')
+class TagsAutoComplete(autocomplete.Select2QuerySetView):
+    """Used for autocompletion of tags"""
+    def get_queryset(self):
+
+        qs = Tag.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs.order_by('name')
 
 class LatestIdeaRSSFeed(Feed):
     """"Publish the RSS feed for latest public ideas"""

@@ -27,4 +27,8 @@ urlpatterns = [
     path('latest/rss-feed/',
          condition(last_modified_func=latest_entry)(views.LatestIdeaRSSFeed()),
          name='rss-feed'),
+    path('tags-autocomplete/',
+        views.TagsAutoComplete.as_view(),
+        name='tags-autocomplete',
+    ),
 ]
