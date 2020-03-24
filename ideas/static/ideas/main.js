@@ -1,5 +1,6 @@
 'use strict';
-
+// $ may not available due to namespace conflict with autosuggest.
+$ = $ || django.jQuery;
 $(document).ready(function(event) {
     $('.subForm').submit(subscribe);
     $('.copy').on('click', function(event) {
@@ -32,8 +33,8 @@ $(document).ready(function(event) {
  */
 function subscribe(event) {
     const responseDiv = $('#sub-response');
-    const email = $('#email').val();
-    responseDiv.html('Registering ' + email + ' with HackAdda!');
+    const email = $('#email');
+    responseDiv.html('Registering ' + email.val() + ' with HackAdda!');
     const url = $(this)[0].action;
     const data = $(this).serialize;
     $.ajax({

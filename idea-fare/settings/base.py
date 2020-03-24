@@ -15,6 +15,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'dal',
+    'dal_select2',
+    # This is to override the jquery.init.js script provided by the admin, 
+    # which sets up jQuery with noConflict, making jQuery available in django.jQuery only and not $.
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -28,6 +32,7 @@ INSTALLED_APPS = [
     'fluent_comments',
     'django_comments',
     'threadedcomments',
+    'taggit',
     ################################
     'users',
     'ideas',
@@ -111,10 +116,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # for using the sites framework
 SITE_ID = 1
 
-### Used by Django-Meta app for rendering meta tags ###
+############## Used by Django-Meta app for rendering meta tags #############
 META_SITE_DOMAIN = ''
 META_SITE_PROTOCOL = 'http'
-#########################################
+################################################################
 
 # set up variables to be used for sending emails
 if email_host_user is not None:
@@ -129,3 +134,8 @@ FLUENT_COMMENTS_FORM_CLASS = 'ideas.forms.CommentForm'
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title')
 
 ###############################################################################
+
+################ Django-taggit############################
+TAGGIT_CASE_INSENSITIVE = True
+
+##############################################################################

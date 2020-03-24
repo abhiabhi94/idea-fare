@@ -1,6 +1,8 @@
 {% extends "ideas/base.html" %}
 {% load static  %}
 {% block content %}
+    {% block heading %}
+    {% endblock heading %}
 {% include "ideas/idea_list.html" %}
 {% include "paginate.html" %}
 {% endblock content %}

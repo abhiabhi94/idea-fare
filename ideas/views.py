@@ -15,15 +15,21 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http.response import HttpResponseBadRequest, JsonResponse
+from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django.db.utils import IntegrityError
 from meta.views import Meta
+from taggit.models import Tag
+from dal import autocomplete
 from ideas.models import Idea
 from ideas.manager import (email_verification,
                            get_public_ideas,
                            process_idea_form
                            )
 from subscribers.models import Subscriber
+from ideas.forms import (AnonymousIdeaCreateForm,
+                         NonAnonymousIdeaCreateForm)
+
 
 global paginate_by
 paginate_by = 15
@@ -115,12 +121,10 @@ class Home(ListView):
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
 class AnonymousIdeaCreateView(CreateView):
     """Submit ideas anonymously"""
+    form_class = AnonymousIdeaCreateForm
+    model = Idea
     template_name = 'ideas/idea_form.html'
     context_object_name = 'idea'
-    model = Idea
-    fields = ['title', 'concept',
-              #   'tags'
-              ]
 
     def form_valid(self, form):
         """For a valid form, check if the user wants the idea to be anonymous."""
@@ -131,10 +135,7 @@ class AnonymousIdeaCreateView(CreateView):
 @method_decorator(require_http_methods(['GET', 'POST']), name='dispatch')
 class NonAnonymousIdeaCreateView(LoginRequiredMixin, AnonymousIdeaCreateView):
     """Submit ideas non-anonymously"""
-
-    fields = ['title', 'concept', 'visibility',
-              #   'tags'
-              ]
+    form_class = NonAnonymousIdeaCreateForm
 
 
 @method_decorator(require_http_methods(['GET']), name='dispatch')
@@ -158,9 +159,7 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
 class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Allows only conceivers to update their idea"""
     model = Idea
-    fields = ['title', 'concept', 'visibility'
-              #   'tags',
-              ]
+    form_class = NonAnonymousIdeaCreateForm
 
     def form_valid(self, form):
         """Check whether the user logged in is the one updating the idea."""
@@ -171,7 +170,7 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.request, 'Your idea has been successfully updated.')
         else:
             messages.warning(
-                self.request, 'You are not allowed to tinker with this idea.')
+                self.request, 'You are not allowed to update this idea.')
             return redirect('idea:home')
 
         return super().form_valid(form)
@@ -191,9 +190,6 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class IdeaDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """Allow only conceivers to delete their idea and give a successfull message upon completion"""
     model = Idea
-    fields = ['title', 'concept', 'visibility'
-              # 'tags'
-              ]
     context_object_name = 'idea'
     success_url = reverse_lazy('ideas:home')
     success_message = 'Idea {} was removed successfully'
@@ -257,6 +253,41 @@ class ConceiverIdeaListView(ListView):
                                keywords=meta_home.keywords)
         return context
 
+
+@method_decorator(require_http_methods(['GET']), name='dispatch')
+class TaggedIdeaListView(ListView):
+    template_name = 'ideas/idea_tagged.html'
+    context_object_name = 'ideas'
+
+    def get_queryset(self):
+        idea_list = Idea.objects.all().filter(
+            tags__slug=self.kwargs.get('slug').lower())
+        if idea_list:
+            return idea_list
+        raise Http404('Tag not present')
+
+    paginate_by = paginate_by
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug').lower()
+        tag = get_object_or_404(Tag, slug=slug).name
+        context['meta'] = Meta(title=f'About | IdeaFare',
+                               description=f'Ideas with the tag {tag}',
+                               keywords=meta_home.keywords + [tag])
+        context['tag'] = tag
+        return context
+
+@method_decorator(require_http_methods(['GET']), name='dispatch')
+class TagsAutoComplete(autocomplete.Select2QuerySetView):
+    """Used for autocompletion of tags"""
+    def get_queryset(self):
+
+        qs = Tag.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs.order_by('name')
 
 class LatestIdeaRSSFeed(Feed):
     """"Publish the RSS feed for latest public ideas"""
