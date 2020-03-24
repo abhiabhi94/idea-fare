@@ -15,6 +15,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http.response import HttpResponseBadRequest, JsonResponse
+from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django.db.utils import IntegrityError
 from meta.views import Meta

@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, ValidationError
 from fluent_comments.forms import FluentCommentForm
 from fluent_comments.models import FluentComment
 from ideas.manager import email_verification
@@ -65,7 +65,7 @@ class CommentForm(FluentCommentForm):
         """
         email = self.cleaned_data.get('email').lower()
         if not email_verification(email):
-            raise forms.ValidationError(
+            raise ValidationError(
                 'Are you sure %(email)s is a valid email address? We suspect you made a typing error',
                 code='invalid',
                 params={'email': email})
