@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from ideas.manager import email_verification
-
+from snowpenguin.django.recaptcha3.fields import ReCaptchaField
 
 class CleanUserDetailsMixin:
     """A mixin to clean the fields used for user registration"""
@@ -63,6 +63,7 @@ class UserRegisterForm(UserCreationForm, CleanUserDetailsMixin):
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100, required=False)
     email = forms.EmailField()
+    captcha = ReCaptchaField() 
 
     class Meta:
         model = User

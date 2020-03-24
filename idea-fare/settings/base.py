@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django_comments',
     'threadedcomments',
     'taggit',
+    'snowpenguin.django.recaptcha3',
     ################################
     'users',
     'ideas',
@@ -137,5 +138,13 @@ FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title')
 
 ################ Django-taggit############################
 TAGGIT_CASE_INSENSITIVE = True
+
+##############################################################################
+
+################ Django-recaptcha3############################
+RECAPTCHA_PRIVATE_KEY = '6LcYvOMUAAAAALY7HbPDdAUguUmtIbunESCd8RsS'
+RECAPTCHA_PUBLIC_KEY = '6LcYvOMUAAAAAPY-6-3kAELFXZ-ZA6jLH9XAW6St'
+RECAPTCHA_DEFAULT_ACTION = 'generic'
+RECAPTCHA_SCORE_THRESHOLD = 0.5
 
 ##############################################################################

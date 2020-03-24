@@ -5,6 +5,7 @@ from fluent_comments.models import FluentComment
 from ideas.manager import email_verification
 from ideas.models import Idea
 from dal import autocomplete
+from snowpenguin.django.recaptcha3.fields import ReCaptchaField
 
 """
 TODO:
@@ -18,9 +19,11 @@ TODO:
 class AnonymousIdeaCreateForm(ModelForm):
     """Form for anonymous users"""
 
+    captcha = ReCaptchaField() 
+    
     class Meta:
         model = Idea
-        fields = ['title', 'concept', 'tags']
+        fields = ['title', 'concept', 'tags', 'captcha']
         widgets = {
             'concept': Textarea(attrs={'col': 80, 'row': 20}),
             'tags': autocomplete.TaggitSelect2('ideas:tags-autocomplete')
@@ -29,9 +32,11 @@ class AnonymousIdeaCreateForm(ModelForm):
 class NonAnonymousIdeaCreateForm(autocomplete.FutureModelForm, ModelForm):
     """Form for authenticated users"""
 
+    captcha = ReCaptchaField() 
+
     class Meta:
         model = Idea
-        fields = ['title', 'concept', 'tags', 'visibility']
+        fields = ['title', 'concept', 'tags', 'visibility', 'captcha']
         widgets = {
             'concept': Textarea(attrs={'col': 80, 'row': 20}),
             'tags': autocomplete.TaggitSelect2('ideas:tags-autocomplete')
