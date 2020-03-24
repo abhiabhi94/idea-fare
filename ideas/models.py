@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from taggit.managers import TaggableManager
+from urlextract import URLExtract
 
 MAX_TITLE_LENGTH = 60
 MAX_CONCEPT_LENGTH = 500
@@ -54,7 +55,10 @@ class Idea(models.Model):
         # Anonymous Ideas will always be public
         if self.user is None:
             self.visibility = True
-
+        extractor = URLExtract()
+        for url in extractor.gen_urls(self.concept):
+            print(url) # prints: ['janlipovsky.cz']
+            self.concept = self.concept.replace(url, "<a href={}>{}</a>".format(url, url))
         super(Idea, self).save(*args, **kwargs)
 
     def __str__(self):

@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="idea-content mt-4">
-                    {{ idea.concept|linebreaks }}
+                    {{ idea.concept | safe | linebreaks }}
                 </div>
                 {% include "tags.html" with tags=idea.get_tags_list %}
                 <div class="idea-comments">
