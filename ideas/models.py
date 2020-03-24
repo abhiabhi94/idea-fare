@@ -57,7 +57,6 @@ class Idea(models.Model):
             self.visibility = True
         extractor = URLExtract()
         for url in extractor.gen_urls(self.concept):
-            print(url) # prints: ['janlipovsky.cz']
             self.concept = self.concept.replace(url, "<a href={}>{}</a>".format(url, url))
         super(Idea, self).save(*args, **kwargs)
 

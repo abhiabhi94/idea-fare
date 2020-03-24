@@ -4,10 +4,20 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 import debug_toolbar
+from decorators.guard import require_superuser
 from users import views as user_views
 
+def dec_patterns(patterns):
+    decorated_patterns = []
+    for pattern in patterns:
+        callback = pattern.callback
+        pattern.callback = require_superuser(callback)
+        pattern._callback = require_superuser(callback)
+        decorated_patterns.append(pattern)
+    return decorated_patterns
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', (dec_patterns(admin.site.urls[0]),) + admin.site.urls[1:]),
 ]
 
 urlpatterns += [
