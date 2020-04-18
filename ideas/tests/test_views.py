@@ -133,11 +133,13 @@ class ClassBasedViewTest(TestCase):
                 Idea.objects.create(
                     title=f'Anonymous Idea: idea number {idea_id}',
                     concept=f'The concept of the idea {idea_id}',
+                    tags=f'tag_{idea_id}, tag_{idea_id+1}'
                 )
             else:
                 Idea.objects.create(
                     title=f'Non-anonymous Idea: idea number {idea_id}',
                     concept=f'The concept of the idea{idea_id}',
+                    tags=f'tag_{idea_id}, tag_{idea_id+1}',
                     user=cls.user,
                     visibility=False if idea_id % 10 == 0 else True
                 )
@@ -207,7 +209,8 @@ class ClassBasedViewTest(TestCase):
         response = self.client.get(url_idea_create)
         response = self.client.post(url_idea_create, data={
             'title': 'This is an anonymous idea',
-            'concept': 'Unit testing seems to be fun and boring'
+            'concept': 'Unit testing seems to be fun and boring',
+            'tags': 'test, unit-test'
         })
         # Can't use assertRedirect since we are not sure about the redirected url
         self.assertEqual(response.status_code, 302)
@@ -221,6 +224,7 @@ class ClassBasedViewTest(TestCase):
         response = self.client.post(url_idea_create, data={
             'title': 'This is an anonymous idea',
             'concept': 'Unit testing seems to be fun and boring',
+            'tags': 'test, unit-test',
             'user': self.user
         })
         # Can't use assertRedirect since we are not sure about the redirected url
@@ -274,6 +278,7 @@ class ClassBasedViewTest(TestCase):
         response = self.client.post(url_idea_create, data={
             'title': 'This is an anonymous public idea',
             'concept': 'Unit testing seems to be fun and boring',
+            'tags': 'test, unit-test',
             'user': self.user
         })
         # Can't use assertRedirect since we are not sure about the redirected url
@@ -288,6 +293,7 @@ class ClassBasedViewTest(TestCase):
         response = self.client.post(url_idea_create, data={
             'title': 'This is an non-anonymous private idea',
             'concept': 'Unit testing seems to be fun and boring',
+            'tags': 'test, unit-test',
             'user': self.user,
             'visibility': False
         })
@@ -370,6 +376,7 @@ class ClassBasedViewTest(TestCase):
         response = self.client.post(url_idea_update, data={
             'title': 'This is an updated idea',
             'concept': 'Unit testing suddenly, seems too much work',
+            'tags': 'update-test, unit-test',
             'user': self.user
         })
         # Can't use assertRedirect since we are not sure about the redirected url

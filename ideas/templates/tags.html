@@ -1,0 +1,5 @@
+<span>
+{% for tag in tags %}
+    <a href="{% url 'ideas:tagged' tag.slug %}"  title="Posts with the tag {{ tag.name }}"><p class="idea-tags">{{ tag.name }}</p></a>
+{% endfor %}
+</span>
