@@ -15,6 +15,7 @@ class UserRegisterForm(UserCreationForm, CleanUserDetailsMixin):
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100, required=False)
     email = forms.EmailField()
+    captcha = ReCaptchaField()
 
     class Meta:
         model = User

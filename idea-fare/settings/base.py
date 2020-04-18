@@ -4,7 +4,8 @@ import sys
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
-from setup.setup import project_name, email_host_user, email_host_pass   # nopep8
+from setup.setup import (project_name, email_host_user, email_host_pass,
+                 recaptcha_private_key, recaptcha_public_key)   # nopep8
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     'django_comments',
     'threadedcomments',
     'taggit',
+    'snowpenguin.django.recaptcha3',
     ################################
     'users',
     'ideas',
@@ -137,5 +139,13 @@ FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title')
 
 ################ Django-taggit############################
 TAGGIT_CASE_INSENSITIVE = True
+
+##############################################################################
+
+################ Django-recaptcha3############################
+RECAPTCHA_PRIVATE_KEY = recaptcha_private_key 
+RECAPTCHA_PUBLIC_KEY = recaptcha_public_key
+RECAPTCHA_DEFAULT_ACTION = 'generic'
+RECAPTCHA_SCORE_THRESHOLD = 0.5
 
 ##############################################################################
