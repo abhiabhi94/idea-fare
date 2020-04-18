@@ -5,6 +5,7 @@ Ideally, the logical part (apart from that written in models)\
 """
 from django.contrib import messages
 from django.contrib.auth import login
+from django.utils.translation import gettext_lazy as _
 
 
 def log_in_user(request, user):
@@ -25,6 +26,6 @@ def log_in_user(request, user):
               backend='django.contrib.auth.backends.ModelBackend')
         return True
     else:
-        messages.info(request, 'Unable to log you in automatically.\
-            Please try going through the login page')
+        messages.info(request, _('Unable to log you in automatically.\
+            Please try going through the login page'))
         return False
