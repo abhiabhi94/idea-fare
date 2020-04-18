@@ -2,10 +2,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms import ModelForm, Textarea, ValidationError
 from fluent_comments.forms import FluentCommentForm
 from fluent_comments.models import FluentComment
-from ideas.manager import email_verification
-from ideas.models import Idea
 from dal import autocomplete
 from snowpenguin.django.recaptcha3.fields import ReCaptchaField
+from ideas.manager import email_verification
+from ideas.models import Idea
 
 """
 TODO:
