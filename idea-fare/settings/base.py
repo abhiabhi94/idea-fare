@@ -17,7 +17,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'dal',
     'dal_select2',
-    # This is to override the jquery.init.js script provided by the admin, 
+    # This is to override the jquery.init.js script provided by the admin,
     # which sets up jQuery with noConflict, making jQuery available in django.jQuery only and not $.
     'django.contrib.admin',
     'django.contrib.auth',

@@ -1,18 +1,16 @@
+from django import forms
+from django.utils.translation import gettext_lazy as _
+
 from django.utils.translation import ugettext_lazy as _
 from django.forms import ModelForm, Textarea, ValidationError
+
 from fluent_comments.forms import FluentCommentForm
 from fluent_comments.models import FluentComment
-from ideas.manager import email_verification
-from ideas.models import Idea
+
 from dal import autocomplete
 
-"""
-TODO:
-    Both AnonymousIdeaCreateForm and NonAnonymousIdeaCreateForm have\
-    a lot of code that is common, only the field inside the Meta class\
-    is different. In an ideal world, we would want to have a mixing and\
-    use the mixin in both the forms by just overriding the fields.
-"""
+from ideas.manager import email_verification
+from ideas.models import Idea
 
 
 class AnonymousIdeaCreateForm(ModelForm):
@@ -25,6 +23,7 @@ class AnonymousIdeaCreateForm(ModelForm):
             'concept': Textarea(attrs={'col': 80, 'row': 20}),
             'tags': autocomplete.TaggitSelect2('ideas:tags-autocomplete')
         }
+
 
 class NonAnonymousIdeaCreateForm(autocomplete.FutureModelForm, ModelForm):
     """Form for authenticated users"""
@@ -65,8 +64,8 @@ class CommentForm(FluentCommentForm):
         """
         email = self.cleaned_data.get('email').lower()
         if not email_verification(email):
-            raise ValidationError(
-                'Are you sure %(email)s is a valid email address? We suspect you made a typing error',
+            raise forms.ValidationError(
+                _('Are you sure %(email)s is a valid email address? We suspect you made a typing error'),
                 code='invalid',
                 params={'email': email})
 

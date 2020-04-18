@@ -1,3 +1,8 @@
+{% comment %} 
+    
+    Overriden to change `staticfiles` tag to `static` for Django 3.0 
+
+{% endcomment %}
 {% load i18n static %}
 <a href="#c0" class="comment-cancel-reply-link">{% trans "cancel reply" %}</a>
 <span class="comment-waiting" id="comment-waiting-{{ target_object.pk }}" style="display: none;">
