@@ -28,8 +28,8 @@ $(document).ready(function(event) {
     })
 });
 /**
- * 
- * @param {event} event - The event that takes place 
+ *
+ * @param {event} event - The event that takes place
  */
 function subscribe(event) {
     const responseDiv = $('#sub-response');
@@ -60,7 +60,7 @@ function subscribe(event) {
  * Create a temporary div, append it to the div'#response', fix it to the top and fade it.
  * @param {int} status - an integer based upon the response received for AJAX request.
  * (-1->'error'|0->'success'| 1->'warning')
- * @param {string} msg - a string depicting the message to be displayed in the response. 
+ * @param {string} msg - a string depicting the message to be displayed in the response.
  * @param {int} time - time after which the response fades away
  */
 function createResponse(status, msg, time = 2000) {
@@ -90,7 +90,7 @@ function createResponse(status, msg, time = 2000) {
 }
 /**
  * Fixes an element to the top of the viewport.
- * @param {element} div - element that is to be fixed at the top of the viewport. 
+ * @param {element} div - element that is to be fixed at the top of the viewport.
  */
 function fixToTop(div) {
     const isfixed = div.css('position') == 'fixed';
