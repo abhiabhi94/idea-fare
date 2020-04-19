@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible"
         content="ie=edge"> {% include 'meta/meta.html' %}
-    <link rel="canonical" href="{{request.build_absolute_uri}}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <link rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -89,6 +89,7 @@
     <meta 
         name="msapplication-config" 
         content={% static "browserconfig.xml" %}>
+    
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script 
         src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -207,15 +208,15 @@
   >
 </svg
 ></a>
-                <button class="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarToggle"
-                    aria-controls="navbarToggle"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarToggle"
+                aria-controls="navbarToggle"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav ml-auto mr-auto">

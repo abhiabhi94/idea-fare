@@ -1,12 +1,20 @@
 {% extends "ideas/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load recaptcha3 %}
+
+{% block extrahead %}
+{% recaptcha_init %}
+{% recaptcha_ready action_name='homepage' %}
+{% endblock extrahead %}
+
 {% block content %}
 <div class="content-section">
     <form method="post">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Post an Idea</legend>
+            {{ form.media }}
             {{ form|crispy }}
         </fieldset>
         <div class="form-group">

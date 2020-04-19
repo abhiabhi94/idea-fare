@@ -4,7 +4,8 @@ import sys
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
-from setup.setup import project_name, email_host_user, email_host_pass   # nopep8
+from setup.setup import (project_name, email_host_user, email_host_pass,
+                 recaptcha_private_key, recaptcha_public_key)   # nopep8
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(
@@ -15,6 +16,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'dal',
+    'dal_select2',
+    # This is to override the jquery.init.js script provided by the admin,
+    # which sets up jQuery with noConflict, making jQuery available in django.jQuery only and not $.
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -28,6 +33,8 @@ INSTALLED_APPS = [
     'fluent_comments',
     'django_comments',
     'threadedcomments',
+    'taggit',
+    'snowpenguin.django.recaptcha3',
     ################################
     'users',
     'flag',
@@ -112,10 +119,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # for using the sites framework
 SITE_ID = 1
 
-### Used by Django-Meta app for rendering meta tags ###
+############## Used by Django-Meta app for rendering meta tags #############
 META_SITE_DOMAIN = ''
 META_SITE_PROTOCOL = 'http'
-#########################################
+################################################################
 
 # set up variables to be used for sending emails
 if email_host_user is not None:
@@ -130,3 +137,16 @@ FLUENT_COMMENTS_FORM_CLASS = 'ideas.forms.CommentForm'
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title')
 
 ###############################################################################
+
+################ Django-taggit############################
+TAGGIT_CASE_INSENSITIVE = True
+
+##############################################################################
+
+################ Django-recaptcha3############################
+RECAPTCHA_PRIVATE_KEY = recaptcha_private_key 
+RECAPTCHA_PUBLIC_KEY = recaptcha_public_key
+RECAPTCHA_DEFAULT_ACTION = 'generic'
+RECAPTCHA_SCORE_THRESHOLD = 0.5
+
+##############################################################################

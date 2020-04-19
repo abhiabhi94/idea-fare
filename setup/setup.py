@@ -18,4 +18,7 @@ email_host_pass = os.getenv('EMAIL_PASS', None)
 if email_host_user is None or email_host_pass is None:
     print('Warning: You will not be able to send any emails using this project')
 
+recaptcha_private_key = os.getenv('RECAPTCHA_PRIVATE_KEY', None) 
+recaptcha_public_key = os.getenv('RECAPTCHA_PUBLIC_KEY', None)
+
 prod_flag = os.getenv('PROD', None)

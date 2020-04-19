@@ -7,6 +7,9 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
 
+from taggit.managers import TaggableManager
+from urlextract import URLExtract
+
 from flag.models import FlagInstance
 
 MAX_TITLE_LENGTH = 60
@@ -31,7 +34,9 @@ class Idea(models.Model):
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name='public', default=True)
     flag = GenericRelation(FlagInstance, related_query_name='flagged')
-    
+
+    tags = TaggableManager()
+
     _metadata = {
         'title': 'title',
         'description': 'concept',
@@ -58,6 +63,11 @@ class Idea(models.Model):
         if self.user is None:
             self.visibility = True
 
+        # Linkinfy the links
+        extractor = URLExtract()
+        for url in extractor.gen_urls(self.concept):
+            self.concept = self.concept.replace(url, "<a href={}>{}</a>".format(url, url))
+
         super(Idea, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -78,3 +88,6 @@ class Idea(models.Model):
 
     def get_absolute_url(self):
         return reverse('ideas:idea-details', kwargs={'slug': self.slug})
+
+    def get_tags_list(self):
+        return self.tags.all()
