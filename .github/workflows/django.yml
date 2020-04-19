@@ -17,12 +17,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Secret Scan
+      uses: max/secret-scan@1.0.0
     - name: Python Syntax Checker
       uses: cclauss/Find-Python-syntax-errors-action@v0.2.0
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Sort your Python imports with isort
+      uses: olance/isort-action@v1.1.0
+      with:
+        # Arguments provided to isort
+        args: --recursive
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
