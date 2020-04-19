@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load comments static %}
+{% load flag_tags %}
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="{% static 'fluent_comments/css/ajaxcomments.css' %}" />
 {% endblock extrahead %}
@@ -36,6 +37,7 @@
                                 title={% trans "Delete"%}>{% trans "Delete"%}</a>
                         </div>
                         {% endif %}
+                        {% render_flag_form idea idea.conceiver %}
                     </div>
                 </div>
                 <div class="idea-content mt-4">

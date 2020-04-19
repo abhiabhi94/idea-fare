@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load cool_timesince %}
 <div class="idea-list">
     <div class="card-group">
@@ -14,7 +15,7 @@
                             {{ idea.concept|truncatechars:'50'}}&nbsp;
                             <a style="display:inline-block"
                                 href="{{ idea.get_absolute_url }}"
-                                title="Read full concept">Read more</a>
+                                title={% trans "Read full concept" %}>{% trans "Read more" %}</a>
                         </p>
                     </div>
                 </div>
