@@ -1,9 +1,11 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls.static import static
-from django.contrib.auth import views as auth_views
 from django.conf import settings
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from django.conf.urls.static import static
+from django.urls import include, path
+
 import debug_toolbar
+
 from users import views as user_views
 
 urlpatterns = [

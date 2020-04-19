@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'threadedcomments',
     ################################
     'users',
+    'flag',
     'ideas',
     'subscribers',
     ################################

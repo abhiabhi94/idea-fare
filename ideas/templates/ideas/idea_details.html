@@ -1,5 +1,6 @@
 {% extends "ideas/base.html" %}
 {% load static %}
+{% load i18n %}
 {% load comments static %}
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="{% static 'fluent_comments/css/ajaxcomments.css' %}" />
@@ -20,27 +21,26 @@
                     <div class="idea-info">
                         {% include "ideas/idea_conceiver.html" %}
                         <small class="text-muted mr-2"
-                            title="{{ idea.date_created }}">Created: {{ idea.date_created|date:"j M Y" }}</small>
+                            title="{{ idea.date_created }}">{% trans "Created" %}: {{ idea.date_created|date:"j M Y" }}</small>
                         {% if idea.date_update %}
                         <small class="text-muted date-modified"
-                            title="{{ post.date_updated }}">Last modified: {{ post.date_updated|date:"j M Y" }}</small>
+                            title="{{ post.date_updated }}">{% trans "Last modified" %}: {{ post.date_updated|date:"j M Y" }}</small>
                         {% endif %}
                         {% if request.user == idea.conceiver %}
                         <div id="post-options">
                             <a class="btn btn-secondary btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-update' idea.slug %}"
-                                title="Tinker">Tinker</a>
+                                title={% trans "Tinker"%}>{% trans "Tinker"%}</a>
                             <a class="btn btn-danger btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-delete' idea.slug %}"
-                                title="Delete">Delete</a>
+                                title={% trans "Delete"%}>{% trans "Delete"%}</a>
                         </div>
                         {% endif %}
                     </div>
                 </div>
                 <div class="idea-content mt-4">{{ idea.concept|linebreaks }}</div>
-                {% comment %} {% include "tags.html" with tags=post.get_tags_list %} {% endcomment %}
                 <div class="idea-comments">
-                    <legend>Comments</legend><hr>
+                    <legend title={% trans "Comments"%}>{% trans "Comments"%}</legend><hr>
                     {% render_comment_list for idea %}
                     {% render_comment_form for idea %}
                 </div>
