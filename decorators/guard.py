@@ -1,5 +1,6 @@
-from django.http import Http404
 from functools import wraps
+
+from django.http import Http404
 
 def require_superuser(func):
     """Redirects non superusers to a 404 page"""
@@ -9,6 +10,5 @@ def require_superuser(func):
             raise Http404
 
         return func(request, *args, **kwargs)
-        # return user_passes_test(func)
 
     return wrapper

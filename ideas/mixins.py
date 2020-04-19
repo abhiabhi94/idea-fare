@@ -39,7 +39,7 @@ class CleanUserDetailsMixin:
         first_name = self.cleaned_data.get('first_name')
         if not first_name.isalpha():
             raise forms.ValidationError(
-                _('Are you sure that %(first_name)s a valid name. Names can only have alphabets'),
+                _('Are you sure that %(first_name)s is a valid name. Names can only have alphabets'),
                 code='invalid',
                 params={'first_name': first_name})
         return first_name
@@ -49,7 +49,7 @@ class CleanUserDetailsMixin:
         last_name = self.cleaned_data.get('last_name')
         if last_name and not last_name.isalpha():
             raise forms.ValidationError(
-                _('Are you sure that %(last_name)s a valid name. Names can only have alphabets'),
+                _('Are you sure that %(last_name)s is a valid name. Names can only have alphabets'),
                 code='invalid',
                 params={'last_name': last_name})
         return last_name

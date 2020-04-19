@@ -1,9 +1,11 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls.static import static
-from django.contrib.auth import views as auth_views
 from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from django.urls import path, include
+
 import debug_toolbar
+
 from decorators.guard import require_superuser
 from users import views as user_views
 
