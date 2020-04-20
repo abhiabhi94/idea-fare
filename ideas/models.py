@@ -10,7 +10,7 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 from urlextract import URLExtract
 
-from flag.models import FlagInstance
+from flag.models import FlaggedContent
 
 MAX_TITLE_LENGTH = 60
 MAX_CONCEPT_LENGTH = 500
@@ -33,8 +33,7 @@ class Idea(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name='public', default=True)
-    flag = GenericRelation(FlagInstance, related_query_name='flagged')
-
+    flag = GenericRelation(FlaggedContent, related_query_name='flagged')
     tags = TaggableManager()
 
     _metadata = {

@@ -57,10 +57,7 @@ urlpatterns += [
              template_name='users/password_reset_complete.html'),
          name='password_reset_complete'
          ),
-    # path('latest/feed',
-    #      condition(last_modified_func=latest_entry)(rss_feed()),
-    #      name='rss-feed'
-    #      ),
+    path('flag', include('flag.urls'))
 ]
 
 if settings.DEBUG:

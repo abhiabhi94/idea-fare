@@ -1,6 +1,7 @@
 from django import template
-
 from django.contrib.contenttypes.models import ContentType
+
+from flag.models import reasons
 
 
 register = template.Library()
@@ -11,25 +12,13 @@ def render_flag_form(context, content_object, creator_field):
     """
     A template tag used for adding flag form in templates
 
-    Usage `{render_flag_form}`
-    
-    Parameters
-    ----------
-    context : [type]
-        [description]
-    content_object : [type]
-        [description]
-    creator_field : [type]
-        [description]
-    
-    Returns
-    -------
-    [type]
-        [description]
+    To render the flag form for a idea model with creator field as 'conceiver'
+
+    Usage: `{% render_flag_form for ideas 'conceiver' %}`
     """
     content_type = ContentType.objects.get(
         app_label=content_object._meta.app_label,
-        model=content_object._meta.module_name
+        model=content_object._meta.model_name
     )
     request = context["request"]
     return {
@@ -38,4 +27,5 @@ def render_flag_form(context, content_object, creator_field):
         "creator_field": creator_field,
         "request": request,
         "user": request.user,
+        "flag_reasons": reasons
     }

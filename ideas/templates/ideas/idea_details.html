@@ -27,17 +27,17 @@
                         <small class="text-muted date-modified"
                             title="{{ post.date_updated }}">{% trans "Last modified" %}: {{ post.date_updated|date:"j M Y" }}</small>
                         {% endif %}
-                        {% if request.user == idea.conceiver %}
                         <div id="post-options">
+                        {% render_flag_form idea 'conceiver' %}
+                        {% if request.user == idea.conceiver %}
                             <a class="btn btn-secondary btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-update' idea.slug %}"
                                 title={% trans "Update"%}>{% trans "Update"%}</a>
                             <a class="btn btn-danger btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-delete' idea.slug %}"
                                 title={% trans "Delete"%}>{% trans "Delete"%}</a>
-                        </div>
                         {% endif %}
-                        {% render_flag_form idea idea.conceiver %}
+                        </div>
                     </div>
                 </div>
                 <div class="idea-content mt-4">
