@@ -15,7 +15,7 @@ charset = utf-8
 max_line_length = 119
 
 # Use 2 spaces for the HTML files
-[*.{html,css,json}]
+[*.{html,css,js,json}]
 indent_style = space
 indent_size = 2
 
