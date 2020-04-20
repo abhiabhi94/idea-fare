@@ -1,35 +1,36 @@
 {% load cool_timesince %}
 <div class="idea-list">
-    <div class="card-group">
+  <div class="card-group">
     {% for idea in ideas %}
-        <div class="col-sm-4" style="margin-bottom:1rem;">
-            <div class="card h-100" style="max-height:400px;min-height:300px">
-                <div class="card-body">
-                    <div class="idea-details">
-                        <h2 class="card-title">
-                            <a class="idea-title"
-                                href="{{ idea.get_absolute_url }}"
-                                title="{{idea.title}}">{{ idea.title }}</a></h2>
-                        <p class="idea-short-des card-text">
-                            {{ idea.concept|truncatechars:'50'}}&nbsp;
-                            <a style="display:inline-block"
-                                href="{{ idea.get_absolute_url }}"
-                                title="Read full concept">Read more</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="idea-tags">
-                    {% include "tags.html" with tags=idea.get_tags_list %}
-                </div>
-                <div class="card-footer">
-                    <div class="idea-metadata">
-                        {% include "ideas/idea_conceiver.html" %}
-                        <small class="mr-2 text-muted"
-                            title="{{ idea.date_created|date:" j M Y " }}">{{ idea.date_created|cool_timesince }}</small>
-                    </div>
-                </div>
-            </div>
+    <div class="col-sm-4 single-card">
+      <div class="card h-100" style="max-height:400px;min-height:300px">
+        <div class="card-body">
+        <div class="idea-tags">
+            <!-- <i class="gg-backspace"></i> -->
+            {% include "tags.html" with tags=idea.get_tags_list %}
         </div>
-    {% endfor %}
+          <div class="idea-details">
+            <h2 class="card-title">
+              <a class="idea-title"
+              href="{{ idea.get_absolute_url }}"
+              title="{{idea.title}}">{{ idea.title }}</a></h2>
+            <p class="idea-short-des card-text">
+              {{ idea.concept|truncatechars:'50'}}&nbsp;
+              <a style="display:inline-block"
+              href="{{ idea.get_absolute_url }}"
+              title="Read full concept">Read more</a>
+            </p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="idea-metadata">
+            {% include "ideas/idea_conceiver.html" %}
+            <small class="mr-2 text-muted"
+              title="{{ idea.date_created|date:" j M Y " }}">{{ idea.date_created|cool_timesince }}</small>
+          </div>
+        </div>
+      </div>
     </div>
+    {% endfor %}
+  </div>
 </div>
