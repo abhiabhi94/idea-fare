@@ -1,11 +1,16 @@
 import secrets
-from django.db import models
+
 from django.contrib.auth.models import User, AnonymousUser
-from django.utils import timezone
+from django.contrib.contenttypes.fields import GenericRelation
+from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.utils import timezone
+
 from taggit.managers import TaggableManager
 from urlextract import URLExtract
+
+from flag.models import FlaggedContent
 
 MAX_TITLE_LENGTH = 60
 MAX_CONCEPT_LENGTH = 500
@@ -28,6 +33,7 @@ class Idea(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name='public', default=True)
+    flag = GenericRelation(FlaggedContent, related_query_name='flagged')
     tags = TaggableManager()
 
     _metadata = {
@@ -55,9 +61,12 @@ class Idea(models.Model):
         # Anonymous Ideas will always be public
         if self.user is None:
             self.visibility = True
+
+        # Linkinfy the links
         extractor = URLExtract()
         for url in extractor.gen_urls(self.concept):
             self.concept = self.concept.replace(url, "<a href={}>{}</a>".format(url, url))
+
         super(Idea, self).save(*args, **kwargs)
 
     def __str__(self):

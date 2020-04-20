@@ -1,6 +1,8 @@
 {% extends "ideas/base.html" %}
 {% load static %}
+{% load i18n %}
 {% load comments static %}
+{% load flag_tags %}
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="{% static 'fluent_comments/css/ajaxcomments.css' %}" />
 {% endblock extrahead %}
@@ -20,21 +22,22 @@
                     <div class="idea-info">
                         {% include "ideas/idea_conceiver.html" %}
                         <small class="text-muted mr-2"
-                            title="{{ idea.date_created }}">Created: {{ idea.date_created|date:"j M Y" }}</small>
+                            title="{{ idea.date_created }}">{% trans "Created" %}: {{ idea.date_created|date:"j M Y" }}</small>
                         {% if idea.date_update %}
                         <small class="text-muted date-modified"
-                            title="{{ post.date_updated }}">Last modified: {{ post.date_updated|date:"j M Y" }}</small>
+                            title="{{ post.date_updated }}">{% trans "Last modified" %}: {{ post.date_updated|date:"j M Y" }}</small>
                         {% endif %}
-                        {% if request.user == idea.conceiver %}
                         <div id="post-options">
+                        {% render_flag_form idea 'conceiver' %}
+                        {% if request.user == idea.conceiver %}
                             <a class="btn btn-secondary btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-update' idea.slug %}"
-                                title="Update">Update</a>
+                                title={% trans "Update"%}>{% trans "Update"%}</a>
                             <a class="btn btn-danger btn-sm mt-1 mb-1 ml-2"
                                 href="{% url 'ideas:idea-delete' idea.slug %}"
-                                title="Delete">Delete</a>
-                        </div>
+                                title={% trans "Delete"%}>{% trans "Delete"%}</a>
                         {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="idea-content mt-4">
@@ -44,16 +47,16 @@
                 <div class="idea-comments">
                     {% get_comment_count for idea as comment_count %}
                     <div class="py-3 text-center">
-                        <a href="{% url 'ideas:home' %}">Return Home</a>
+                        <a href="{% url 'ideas:home' %}">{% trans "Return Home" %}</a>
                         &nbsp;&sdot;&nbsp;
-                        {{ comment_count }} comment{{ comment_count|pluralize }}
-                        ha{{ comment_count|pluralize:"s,ve" }} been posted.
+                        {{ comment_count }} {% trans "comment" %}{{ comment_count|pluralize }}
+                        {% trans "ha" %}{{ comment_count|pluralize:"s,ve" }} {% trans "been posted." %}
                     </div>
 
                     <div class="idea-comment-list">
                         {% render_comment_list for idea %}
                     <div class="idea-comment-form">
-                        <h4 class="card-title text-center pb-3">Post your comment</h4>
+                        <h4 class="card-title text-center pb-3">{% trans "Post your comment" %}</h4>
                         {% render_comment_form for idea %}
                     </div>
                 </div>

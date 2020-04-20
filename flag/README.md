@@ -1,0 +1,1 @@
+This application was inspired from https://github.com/pinax/django-flag/

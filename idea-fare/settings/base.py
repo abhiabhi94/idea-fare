@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'snowpenguin.django.recaptcha3',
     ################################
     'users',
+    'flag',
     'ideas',
     'subscribers',
     ################################

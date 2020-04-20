@@ -1,0 +1,73 @@
+{% load i18n %}
+{% load static %}
+{% load define %}
+<link rel="stylesheet"
+  type="text/css"
+  href="{% static 'flag/flag_style.css' %}">
+<div class="report-modal-form-combined">
+  <button id="report-button" class="btn btn-sm btn-warning">Report</button>
+  <div class="report-modal" id="report-modal">
+    <div class="report-modal-content">
+      <span id="report-modal-close" class="report-modal-close">&times;</span>
+      <div class="report-modal-form">
+        <form method="POST" action="{% url 'flag:flag' %}" id="report-modal-form" class="m-2 p-1">
+          <legend>{% trans "Report this content" %}</legend>
+            {% csrf_token %}
+            <table>
+                <tr class="report-modal-form-reasons">
+                  {% for reason in flag_reasons  %}
+                    <input type="radio" id="{{ reason.reason }}" value={{ reason.value }} name="reason" required>
+                    <label for="{{ reason.reason }}">{{ reason.reason }}</label><br>
+                    {% if forloop.last %}
+                    <p id="last-flag-reason" style="visibility:hidden;">{{reason.value}}</p>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+                <tr><td><textarea id="report-modal-form-comment" rows="10" cols="40" name="comment"></textarea></td></tr>
+                <tr>
+                    <td><input type="hidden" name="object_id" value="{{ object_id }}" />
+                        <input type="hidden" name="content_type" value="{{ content_type }}" />
+                        <input type="hidden" name="creator_field" value="{{ creator_field }}" />
+                        <input type="hidden" name="next_link" value="{{ request.path }}" />
+                        <input type="submit" class="btn btn-sm btn-danger mt-2" value={% trans "Submit" %} /></td>
+                </tr>
+            </table>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const modal = document.getElementById("report-modal");
+const btn = document.getElementById("report-button");
+const span = document.getElementById("report-modal-close");
+const lastFlagReason = document.getElementById('last-flag-reason')
+
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+// when the user clicks on the last reason , open the comment box
+const flagForm = document.getElementById('report-modal-form');
+const flagComment = document.getElementById('report-modal-form-comment');
+flagForm.onchange = function(event){
+  if (event.target.value === lastFlagReason.innerHTML){
+    flagComment.required = true;
+    flagComment.style.display = "block";
+  }else{
+    flagComment.style.display = "none";
+  }
+}
+
+</script>
