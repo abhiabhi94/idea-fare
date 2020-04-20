@@ -62,7 +62,6 @@ def flag(request):
     Parameters
     ----------
     request : WSGI object
-        [description]
     """
     data = request.POST.copy()
     # Look up for the instance to be flagged
