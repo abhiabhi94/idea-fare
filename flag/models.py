@@ -23,7 +23,7 @@ STATUS = getattr(settings, "FLAG_STATUSES", [
 REASON = getattr(settings, "FLAG_REASONS", [
     (1, _("Spam | Exists only to promote a service ")),
     (2, _("Abusive | Intended at promoting hatred")),
-    (3, _("Someting Else")),
+    (3, _("Something Else")),
 ])
 
 # Make a named tuple
@@ -38,7 +38,7 @@ class FlaggedContent(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    creator = models.ForeignKey(User, related_name='flagged_content_creator', on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, related_name='flagged_content_creator', null=True, on_delete=models.CASCADE)
     status = models.SmallIntegerField(choices=STATUS, default=1)
     moderator = models.ForeignKey(User, null=True, related_name='moderated_content', on_delete=models.SET_NULL)
     count = models.SmallIntegerField(default=1)
@@ -49,10 +49,13 @@ class FlaggedContent(models.Model):
 class FlagInstance(models.Model):
 
     flagged_content = models.ForeignKey(FlaggedContent, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, related_name='flagger', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name='flagger', null=True, on_delete=models.SET_NULL)
     date_flagged = models.DateTimeField(auto_now_add=timezone.now)
     reason = models.SmallIntegerField(choices=REASON, default=reason_values[0])
     comment = models.TextField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ['flagged_content', 'user']
 
     def clean(self):
         """If the last reason is choosen, comment shall not be empty"""
@@ -89,14 +92,17 @@ def add_flag(flagger, content_type, object_id, content_creator, reason, comment=
     status : int, optional
         The status of the flag, by default None
     """
-    defaults = dict(creator=content_creator)
+
+    defaults = {}
+    if content_creator.pk is not None: # anonymous user # don't match username as username might be 'anonymous'
+        defaults["creator"] = content_creator
     if status is not None:
         defaults['status'] = status
 
     flagged_content, created = FlaggedContent.objects.get_or_create(
-        content_type=content_type,
+        content_type = content_type,
         object_id = object_id,
-        **defaults
+        defaults = defaults
     )
 
     if not created:
