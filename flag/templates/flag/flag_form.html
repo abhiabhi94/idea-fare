@@ -14,15 +14,15 @@
           <legend>{% trans "Report this content" %}</legend>
             {% csrf_token %}
             <table>
-              {% for reason in flag_reasons  %}
                 <tr class="report-modal-form-reasons">
+                {% for reason in flag_reasons  %}
                   <input type="radio" id="{{ reason.reason }}" value={{ reason.value }} name="reason" required>
                   <label for="{{ reason.reason }}">{{ reason.reason }}</label><br>
                   {% if forloop.last %}
                     <p id="last-flag-reason" style="visibility:hidden;">{{reason.value}}</p>
                   {% endif %}
+                {% endfor %}
                 </tr>
-              {% endfor %}
                 <tr>
                   <td>
                     <textarea id="report-modal-form-comment" rows="10" cols="40" name="comment"></textarea>

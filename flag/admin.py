@@ -8,5 +8,6 @@ class InlineFlagInstance(admin.TabularInline):
 
 class FlaggedContentAdmin(admin.ModelAdmin):
     inlines = [InlineFlagInstance]
+    list_display = ['content_object', 'creator', 'status', 'moderator', 'count']
 
 admin.site.register(FlaggedContent, FlaggedContentAdmin)

@@ -46,6 +46,10 @@ class FlaggedContent(models.Model):
     class Meta:
         unique_together = ['content_type', 'object_id']
 
+    def __str__(self):
+        return self.content_object
+
+
 class FlagInstance(models.Model):
 
     flagged_content = models.ForeignKey(FlaggedContent, on_delete=models.CASCADE)
@@ -100,9 +104,9 @@ def add_flag(flagger, content_type, object_id, content_creator, reason, comment=
         defaults['status'] = status
 
     flagged_content, created = FlaggedContent.objects.get_or_create(
-        content_type = content_type,
-        object_id = object_id,
-        defaults = defaults
+        content_type=content_type,
+        object_id=object_id,
+        **defaults
     )
 
     if not created:
