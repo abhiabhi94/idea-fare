@@ -47,7 +47,7 @@ def user_has_reported_this_content_earlier(request, content_object):
     Returns:
         bool
     """
-    breakpoint()
+
     if content_object.flag.filter(flaginstance__user=request.user).exists():
         messages.warning(request, _('You have already reported this content. Please wait while a moderator reviews your request'))
         return True
