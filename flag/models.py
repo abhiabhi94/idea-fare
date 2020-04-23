@@ -46,9 +46,6 @@ class FlaggedContent(models.Model):
     class Meta:
         unique_together = ['content_type', 'object_id']
 
-    def __str__(self):
-        return self.content_object
-
 
 class FlagInstance(models.Model):
 
@@ -60,6 +57,7 @@ class FlagInstance(models.Model):
 
     class Meta:
         unique_together = ['flagged_content', 'user']
+        ordering = ['-date_flagged']
 
     def clean(self):
         """If the last reason is choosen, comment shall not be empty"""
