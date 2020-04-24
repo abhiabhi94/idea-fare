@@ -4,7 +4,12 @@
 {% load comments static %}
 {% load flag_tags %}
 {% block extrahead %}
-<link rel="stylesheet" type="text/css" href="{% static 'fluent_comments/css/ajaxcomments.css' %}" />
+<link rel="stylesheet"
+  type="text/css"
+  href="{% static 'fluent_comments/css/ajaxcomments.css' %}"/>
+<link rel="stylesheet"
+  type="text/css"
+  href="{% static 'flag/css/flag_style.css' %}"/>
 {% endblock extrahead %}
 {% block content %}
 
@@ -66,6 +71,11 @@
 </div>
 {% endblock content %}
 {% block extrabottom %}
-<script type="text/javascript" src="{% static 'fluent_comments/js/ajaxcomments.js' %}"></script>
+<script
+  type="text/javascript"
+  src="{% static 'fluent_comments/js/ajaxcomments.js' %}"></script>
+<script
+  type="text/javascript"
+  src="{% static 'flag/js/flag_main.js' %}"></script>
 {% endblock extrabottom %}
 

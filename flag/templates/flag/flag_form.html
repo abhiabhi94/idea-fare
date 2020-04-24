@@ -1,40 +1,77 @@
 {% load i18n %}
 {% load static %}
-{% load define %}
-<link rel="stylesheet"
-  type="text/css"
-  href="{% static 'flag/css/flag_style.css' %}">
 <div class="report-modal-form-combined">
-  <button id="report-button" class="btn btn-sm btn-warning">Report</button>
-  <div class="report-modal" id="report-modal">
+  <button
+    id="flag-report-button-{{ content_type  }}-{{ object_id }}"
+    class="btn btn-sm btn-warning flag-report-button">
+    <i
+      title="Report this content"
+      class="fa fa-flag"
+      aria-hidden="true"></i>
+  </button>
+  <div
+    id="report-modal-{{ content_type  }}-{{ object_id }}"
+    class="flag-report-modal">
     <div class="report-modal-content">
-      <span id="report-modal-close" class="report-modal-close">&times;</span>
+      <span
+        id="report-modal-close-{{ content_type  }}-{{ object_id }}"
+        class="report-modal-close">&times;</span>
       <div class="report-modal-form">
-        <form method="POST" action="{% url 'flag:flag' %}" id="report-modal-form" class="m-2 p-1">
+        <form
+          method="POST"
+          action="{% url 'flag:flag' %}"
+          id="report-modal-form-{{ content_type  }}-{{ object_id }}"
+          class="m-2 p-1 report-modal-form">
           <legend>{% trans "Report this content" %}</legend>
             {% csrf_token %}
             <table>
                 <tr class="report-modal-form-reasons">
                 {% for reason in flag_reasons  %}
-                  <input type="radio" id="{{ reason.reason }}" value={{ reason.value }} name="reason" required>
+                  <input
+                    type="radio"
+                    value={{ reason.value }}
+                    name="reason" required>
                   <label for="{{ reason.reason }}">{{ reason.reason }}</label><br>
                   {% if forloop.last %}
-                    <p id="last-flag-reason" style="visibility:hidden;">{{reason.value}}</p>
+                    <p
+                      id="last-flag-reason-{{ content_type  }}-{{ object_id }}"
+                      class="last-flag-reason"
+                      style="visibility:hidden;">{{reason.value}}</p>
                   {% endif %}
                 {% endfor %}
                 </tr>
                 <tr>
                   <td>
-                    <textarea id="report-modal-form-comment" rows="10" cols="40" name="comment"></textarea>
+                    <textarea
+                      id="report-modal-form-comment-{{ content_type  }}-{{ object_id }}"
+                      class="report-modal-form-comment"
+                      rows="10"
+                      cols="40"
+                      name="comment"></textarea>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="hidden" name="object_id" value="{{ object_id }}" />
-                    <input type="hidden" name="content_type" value="{{ content_type }}" />
-                    <input type="hidden" name="creator_field" value="{{ creator_field }}" />
-                    <input type="hidden" name="next_link" value="{{ request.path }}" />
-                    <input type="submit" class="btn btn-sm btn-danger mt-2" value={% trans "Submit" %} />
+                    <input
+                      type="hidden"
+                      name="object_id"
+                      value="{{ object_id }}"/>
+                    <input
+                      type="hidden"
+                      name="content_type"
+                      value="{{ content_type }}"/>
+                    <input
+                      type="hidden"
+                      name="creator_field"
+                      value="{{ creator_field }}"/>
+                    <input
+                      type="hidden"
+                      name="next_link"
+                      value="{{ request.path }}"/>
+                    <input
+                      type="submit"
+                      class="btn btn-sm btn-danger mt-2"
+                      value={% trans "Submit" %} />
                   </td>
                 </tr>
             </table>
@@ -43,6 +80,3 @@
     </div>
   </div>
 </div>
-<script
-  type="text/javascript"
-  src="{% static 'flag/js/flag_main.js' %}"></script>
