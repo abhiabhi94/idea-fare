@@ -40,10 +40,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="idea-content mt-4">
+                <div class="idea-content mt-3 mb-3">
                     {{ idea.concept | safe | linebreaks }}
                 </div>
-                {% include "tags.html" with tags=idea.get_tags_list %}
+                <div class="idea-tags manage-overflow">
+                  {% include "tags.html" with tags=idea.get_tags_list %}
+                </div>
                 <div class="idea-comments">
                     {% get_comment_count for idea as comment_count %}
                     <div class="py-3 text-center">
