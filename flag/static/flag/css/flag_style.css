@@ -1,8 +1,8 @@
-#report-button {
+.flag-report-button {
     float: right;
 }
 
-.report-modal {
+.flag-report-modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -74,14 +74,14 @@
 }
 
 .report-modal-form form {
-    padding: 0.1rem 1rem;
+    font-size: 1rem;
 }
 
 .report-modal-form form label {
     padding: 5px 10px;
 }
 
-#report-modal-form-comment {
+.report-modal-form-comment {
     padding: 0.1rem 1rem;
     background-color: #f7f7f7;
     display: none;
