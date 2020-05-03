@@ -26,7 +26,7 @@ def add_ip_to_host(port=8000):
         port which will handle the request
     """
 
-    IP_PRIVATE = getoutput('hostname -I').strip()
+    IP_PRIVATE = getoutput('hostname -I').strip().split()
     try:
         IP_PUBLIC = urllib.request.urlopen(
             'https://ident.me').read().decode('utf8')
@@ -36,7 +36,7 @@ def add_ip_to_host(port=8000):
         print('Not connected to internet, the developement server will not be accessible from outside')
 
     finally:
-        ALLOWED_HOSTS.append(IP_PRIVATE)
+        ALLOWED_HOSTS.extend(IP_PRIVATE)
         print('You may connect at any of the following:')
         [print(f'http://{i}:{port}') for i in ALLOWED_HOSTS]
         # Just add a blank file after the allowed addresses
