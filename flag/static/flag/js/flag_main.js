@@ -6,7 +6,6 @@ for (let parent of parents) {
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal) {
-            console.log(modal);
             modal.style.display = "none";
         }
     };
@@ -40,14 +39,3 @@ for (let parent of parents) {
         };
     };
 };
-
-
-
-// flagForm.onchange = function(event) {
-//     if (event.target.value === lastFlagReason.innerHTML) {
-//         flagComment.required = true;
-//         flagComment.style.display = "block";
-//     } else {
-//         flagComment.style.display = "none";
-//     }
-// }
