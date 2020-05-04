@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
 
+from fluent_comments.models import FluentComment
 from taggit.managers import TaggableManager
 from urlextract import URLExtract
 
@@ -33,7 +34,7 @@ class Idea(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name='public', default=True)
-    flag = GenericRelation(FlaggedContent, related_query_name='flagged')
+    flag = GenericRelation(FlaggedContent, related_query_name='idea_flagged')
     tags = TaggableManager()
 
     _metadata = {
@@ -90,3 +91,10 @@ class Idea(models.Model):
 
     def get_tags_list(self):
         return self.tags.all()
+
+
+class IdeaComment(FluentComment):
+    flag = GenericRelation(FlaggedContent, related_query_name='comment_flagged')
+
+    def __init__(self, *args, **kwargs):
+        super(IdeaComment, self).__init__(*args, **kwargs)
