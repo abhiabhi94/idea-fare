@@ -1,5 +1,7 @@
 .flag-report-button {
     float: right;
+    border: inherit;
+    background: inherit;
 }
 
 .flag-report-modal {
