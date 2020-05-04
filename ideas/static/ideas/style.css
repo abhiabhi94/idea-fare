@@ -10,6 +10,18 @@ body {
   text-overflow: ellipsis;
 }
 
+.mild-black {
+  color: #18121e;
+}
+
+.mild-white-bg {
+  background-color: #f7f7f7;
+}
+
+.w-100 {
+  width: 100%;
+}
+
 #share .fa {
   font-size: 1.2rem;
   margin-top: 1rem;

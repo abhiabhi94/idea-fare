@@ -1,4 +1,6 @@
 {% extends "ideas/home.html" %}
 {% block heading %}
-<legend>Ideas with the tag <span class="idea-tag">{{ tag }}</span></legend>
+<div style="display: inline-block;" class="mb-4">
+<legend style="display: inline;" class="mr-4 mb-2">Ideas with the tag</legend> <p style="display: inline;" class="idea-tag each-tag">{{ tag }}</p>
+</div>
 {% endblock heading %}
