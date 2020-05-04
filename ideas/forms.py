@@ -3,12 +3,11 @@ from django.forms import ModelForm, Textarea, ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from fluent_comments.forms import FluentCommentForm
-from fluent_comments.models import FluentComment
 from dal import autocomplete
 from snowpenguin.django.recaptcha3.fields import ReCaptchaField
 
 from ideas.manager import email_verification
-from ideas.models import Idea
+from ideas.models import Idea, IdeaComment
 
 class AnonymousIdeaCreateForm(ModelForm):
     """Form for anonymous users"""
@@ -42,8 +41,8 @@ class CommentForm(FluentCommentForm):
     """Adds email verification to django_fluent_comments"""
 
     class Meta:
-        model = FluentComment
-        fields = ['name', 'email', 'comment']
+        model = IdeaComment
+        fields = ['name', 'email', 'comment', 'flag']
 
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)

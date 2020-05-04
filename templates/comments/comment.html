@@ -5,6 +5,7 @@
 {% endcomment %}
 {% load i18n %}
 {% load cool_timesince %}
+{% load flag_tags %}
 <div id="c{{ comment.id }}" class="comment-item">
     {% block comment_item %}
         <h5>
@@ -13,6 +14,8 @@
             <span class="small text-muted comment-date">{{ comment.submit_date|cool_timesince }}</span>
             {% if not comment.is_public %}<span class="comment-moderated-flag">({% trans "moderated" %})</span>{% endif %}
             {% if USE_THREADEDCOMMENTS %}<a href="#c{{ comment.id }}" data-comment-id="{{ comment.id }}" class="comment-reply-link">{% trans "reply" %}</a>{% endif %}
+            {% trans "comment" as comment_field %}
+            {% render_flag_form comment comment_field %}
         {% endblock %}
         </h5>
         <div class="comment-text"><h6>{{ comment.comment|linebreaks }}</h6></div>
