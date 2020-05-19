@@ -12,6 +12,7 @@ from taggit.managers import TaggableManager
 from urlextract import URLExtract
 
 from flag.models import FlaggedContent
+from ideas.manager import IdeaManager
 
 MAX_TITLE_LENGTH = 60
 MAX_CONCEPT_LENGTH = 500
@@ -35,6 +36,9 @@ class Idea(models.Model):
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name='public', default=True)
     flag = GenericRelation(FlaggedContent, related_query_name='idea_flagged')
+
+    objects = models.Manager()
+    public_objects = IdeaManager()
     tags = TaggableManager()
 
     _metadata = {
@@ -91,10 +95,3 @@ class Idea(models.Model):
 
     def get_tags_list(self):
         return self.tags.all()
-
-
-class IdeaComment(FluentComment):
-    flag = GenericRelation(FlaggedContent, related_query_name='comment_flagged')
-
-    def __init__(self, *args, **kwargs):
-        super(IdeaComment, self).__init__(*args, **kwargs)

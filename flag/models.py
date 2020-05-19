@@ -1,9 +1,8 @@
 from collections import namedtuple
-from enum import IntEnum
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.db import models
@@ -12,42 +11,46 @@ from django.utils.translation import gettext_lazy as _
 
 from flag import signals
 
-STATUS = getattr(settings, "FLAG_STATUSES", [
-    (1, _("flagged")),
-    (2, _("flag rejected by moderator")),
-    (3, _("creator notified")),
-    (4, _("content removed by creator")),
-    (5, _("content removed by moderator")),
-])
-
-REASON = getattr(settings, "FLAG_REASONS", [
-    (1, _("Spam | Exists only to promote a service ")),
-    (2, _("Abusive | Intended at promoting hatred")),
-    (3, _("Something Else")),
-])
-
-# Make a named tuple
-reasons = namedtuple('reasons', ['value', 'reason'])
-
-# Construct the list of named tuples
-reasons = [reasons(*reason) for reason in REASON]
-reason_values = [reason.value for reason in reasons]
+User = get_user_model()
 
 class FlaggedContent(models.Model):
     """Used to add flag/moderation to a model"""
+    STATES = getattr(settings, "FLAG_STATES", [
+        (1, _("flagged")),
+        (2, _("flag rejected by moderator")),
+        (3, _("creator notified")),
+        (4, _("content removed by creator")),
+        (5, _("content removed by moderator")),
+    ])
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    creator = models.ForeignKey(User, related_name='flagged_content_creator', null=True, on_delete=models.CASCADE)
-    status = models.SmallIntegerField(choices=STATUS, default=1)
-    moderator = models.ForeignKey(User, null=True, related_name='moderated_content', on_delete=models.SET_NULL)
-    count = models.SmallIntegerField(default=1)
+    creator = models.ForeignKey(User, related_name='flags', null=True, on_delete=models.CASCADE)
+    state = models.SmallIntegerField(choices=STATES, default=1)
+    moderator = models.ForeignKey(User, null=True, related_name='flag_moderators', on_delete=models.SET_NULL)
+    count = models.PositiveIntegerField(default=0)
 
     class Meta:
         unique_together = ['content_type', 'object_id']
 
 
 class FlagInstance(models.Model):
+    REASON = getattr(settings, "FLAG_REASONS", [
+        (1, _("Spam | Exists only to promote a service ")),
+        (2, _("Abusive | Intended at promoting hatred")),
+    ])
+
+    REASON.append((100, _('Something else')))
+
+    # Make a named tuple
+    Reasons = namedtuple('Reason', ['value', 'reason'])
+
+    # Construct the list of named tuples
+    reasons = []
+    for reason in REASON:
+        reasons.append(Reasons(*reason))
+
+    reason_values = [reason.value for reason in reasons]
 
     flagged_content = models.ForeignKey(FlaggedContent, on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='flagger', null=True, on_delete=models.SET_NULL)
@@ -60,8 +63,8 @@ class FlagInstance(models.Model):
         ordering = ['-date_flagged']
 
     def clean(self):
-        """If the last reason is choosen, comment shall not be empty"""
-        if self.reason == reason_values[-1] and not self.comment:
+        """If something else is choosen, comment shall not be empty"""
+        if self.reason == self.reason_values[-1] and not self.comment:
             raise ValidationError(
                 {
                     'comment': ValidationError(_("Please provide some information why you choose to report the content"),code='required')
@@ -73,7 +76,7 @@ class FlagInstance(models.Model):
         super(FlagInstance, self).save(*args, **kwargs)
 
 
-def add_flag(flagger, content_type, object_id, content_creator, reason, comment=None, status=None):
+def add_flag(flagger, content_type, object_id, content_creator, reason, comment=None, state=None):
     """
     Flag contents related to a model for moderation and return the instance
 
@@ -91,8 +94,8 @@ def add_flag(flagger, content_type, object_id, content_creator, reason, comment=
         The reason for flagging. A mapping to the `REASON`
     comment : str, optional
         Comment if any stating the reason for the flag, by default None
-    status : int, optional
-        The status of the flag, by default None
+    state : int, optional
+        The state of the flag, by default None
     """
 
     defaults = {}

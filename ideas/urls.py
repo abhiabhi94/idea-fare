@@ -2,7 +2,7 @@ from django.urls import path
 from django.views.decorators.http import condition
 
 from ideas import views
-from ideas.manager import latest_entry
+from ideas.utils import latest_entry
 
 app_name = 'ideas'
 

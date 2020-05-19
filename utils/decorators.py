@@ -1,3 +1,4 @@
+"""General purpose project wise useful decorators"""
 from functools import wraps
 
 from django.http import Http404

@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
-from ideas.manager import email_verification
+from utils.validators import email_verification
 
 
 class CleanUserDetailsMixin:

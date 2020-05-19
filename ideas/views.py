@@ -1,34 +1,32 @@
-from django.shortcuts import render
+from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.syndication.views import Feed
+from django.db.utils import IntegrityError
+from django.http.response import HttpResponseBadRequest, JsonResponse
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_http_methods
 from django.views.generic import (CreateView,
                                   DetailView,
                                   UpdateView,
                                   DeleteView,
                                   ListView
                                   )
-from django.contrib.auth.models import User, AnonymousUser
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.decorators.http import require_http_methods
-from django.utils.decorators import method_decorator
-from django.contrib.syndication.views import Feed
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
-from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
-from django.http.response import HttpResponseBadRequest, JsonResponse
-from django.http import Http404
-from django.core.exceptions import PermissionDenied
-from django.db.utils import IntegrityError
+
 from meta.views import Meta
-from taggit.models import Tag
 from dal import autocomplete
+from taggit.models import Tag
+
+from ideas.forms import AnonymousIdeaCreateForm, NonAnonymousIdeaCreateForm
 from ideas.models import Idea
-from ideas.manager import (email_verification,
-                           get_public_ideas,
-                           process_idea_form
-                           )
+from ideas.utils import process_idea_form
 from subscribers.models import Subscriber
-from ideas.forms import (AnonymousIdeaCreateForm,
-                         NonAnonymousIdeaCreateForm)
+from utils.validators import email_verification
 
 
 global paginate_by
@@ -109,7 +107,7 @@ class Home(ListView):
     """Returns the latest ideas created with visibility public"""
     template_name = 'ideas/home.html'
     context_object_name = 'ideas'
-    queryset = Idea.objects.filter(visibility=True).all()
+    queryset = Idea.public_objects.all()
     paginate_by = paginate_by
 
     def get_context_data(self, **kwargs):
@@ -143,7 +141,7 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
     """Returns detail view for an idea if it is public or is owned by the logged in user"""
     template_name = 'ideas/idea_details.html'
     context_object_name = 'idea'
-    queryset = Idea.objects.filter()
+    queryset = Idea.objects.all()
 
     def test_func(self):
         """Allow only conceiver to view their idea if it's private"""
@@ -233,7 +231,7 @@ class ConceiverIdeaListView(ListView):
             return self.queryset.filter(user=user)
 
         # Show only public ideas
-        return get_public_ideas().filter(user=user)
+        return Idea.public_objects.filter(user=user)
 
     def get_context_data(self, **kwargs):
         context = super(ConceiverIdeaListView, self).get_context_data(**kwargs)
@@ -299,7 +297,7 @@ class LatestIdeaRSSFeed(Feed):
     #     return {}
 
     def items(self, top_n=5):
-        return get_public_ideas()[:top_n]
+        return Idea.public_objects.all()[:top_n]
 
     def item_title(self, item):
         return item.title

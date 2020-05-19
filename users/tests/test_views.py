@@ -1,16 +1,16 @@
-from django.test import TestCase
 from django.shortcuts import reverse, get_object_or_404
 from django.contrib.auth.models import User
 from django.core import mail
 from django.contrib.sites.models import Site
+
 from users.forms import UserRegisterForm
+from tests.base import TestBase
 
-
-class UserDetailsTest(TestCase):
+class TestUserRegistration(TestBase):
 
     def __init__(self, *args, **kwargs):
-        super(UserDetailsTest, self).__init__(*args, **kwargs)
-        self.username = 'tester'
+        super().__init__(*args, **kwargs)
+        self.username = 'tester_1'
         self.email = 'jachkarta@gmail.com'
         self.first_name = 'Jach'
         self.last_name = 'Karta'
@@ -19,9 +19,10 @@ class UserDetailsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         """Initialise the form data"""
+        super().setUpTestData()
         # create a user for testing purpose
         form = UserRegisterForm(data={
-            'username': 'Tester',
+            'username': 'Tester_1',
             'first_name': 'Jach',
             'email': 'Jachkarta@gmail.com',
             'password1': 'user123#',
@@ -46,7 +47,7 @@ class UserDetailsTest(TestCase):
         username = self.username
 
         user = User.objects.get(email=email)
-        self.assertEqual(user.username, username)
+        self.assertEqual(user.username, username.lower())
 
     def test_email_case_insensitive(self):
         """Test whether email field is case insensitive"""
@@ -54,7 +55,7 @@ class UserDetailsTest(TestCase):
         username = self.username
 
         user = User.objects.get(username=username)
-        self.assertEqual(user.email, email)
+        self.assertEqual(user.email, email.lower())
 
     def test_email_integrity(self):
         """Test invalidation for use of 1 email by more than 1 accounts,\
@@ -70,7 +71,7 @@ class UserDetailsTest(TestCase):
     def test_redirect_on_successful_registration(self):
         """Test redirect to home page on successful registration"""
         data = {
-            'username': 'tester1',
+            'username': 'tester_11',
             'first_name': 'Jach',
             'email': 'jachkarta+test@gmail.com',
             'password1': 'user123#',
@@ -81,15 +82,17 @@ class UserDetailsTest(TestCase):
 
     def test_redirect_authenticated_user_on_register(self):
         """Test whether a logged in user is redirected to home when trying to access register link"""
-        login = self.client.login(
-            username=self.username, password=self.password)
-        self.assertEqual(login, True)
+        self.client.force_login(self.user)
         response = self.client.get(reverse('register'))
         self.assertRedirects(response, expected_url=reverse('ideas:home'))
 
+class TestProfileView(TestBase):
+    def get_url(self):
+        return reverse('profile')
+
     def test_redirect_unauthenticated_user_on_profile(self):
         """Test whether a logged in user is redirected to home when trying to access register link"""
-        response = self.client.get(reverse('profile'))
+        response = self.client.get(self.get_url())
         self.assertRedirects(response, expected_url='/login/?next=/profile/')
 
     def test_profile_updation(self):
@@ -105,10 +108,8 @@ class UserDetailsTest(TestCase):
             'last_name': 'karta',
             'email': 'jachkarta+test1@gmail.com',
         }
-        url_profile = reverse('profile')
-        login = self.client.login(
-            username=self.username, password=self.password)
-        self.assertEqual(login, True)
+        self.client.force_login(self.user)
+        url_profile = self.get_url()
         # Test GET request
         profile_get = self.client.get(url_profile)
         self.assertEqual(profile_get.status_code, 200)
@@ -128,21 +129,37 @@ class UserDetailsTest(TestCase):
         self.assertEqual(user.last_name, new_data['last_name'])
         self.assertEqual(user.email, new_data['email'])
 
-    def test_password_change(self):
+class TestPasswordChangeView(TestBase):
+    def get_url(self):
+        return reverse('password-change')
+
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.user)
+
+    def test_password_change_for_unauthenticated_users(self):
         """Test whether users can change their password and are logged back in"""
+        self.client.logout()
         new_pass = 'NewUser123#'
         data = {
-            'old_password': self.password,
+            'old_password': self.user_data['password'],
             'new_password1': new_pass,
             'new_password2': new_pass
         }
-        url = reverse('password-change')
-        login = self.client.login(
-            username=self.username, password=self.password)
-        self.assertEqual(login, True)
-        password_change = self.client.post(url, data=data)
-        self.assertRedirects(
-            password_change, expected_url=reverse('ideas:home'))
+        url = self.get_url()
+        response = self.client.post(url, data=data)
+        self.assertRedirects(response, expected_url=f'{reverse("login")}?next={url}')
+
+    def test_password_change_for_authenticated_users(self):
+        """Test whether users can change their password and are logged back in"""
+        new_pass = 'NewUser123#'
+        data = {
+            'old_password': self.user_data['password'],
+            'new_password1': new_pass,
+            'new_password2': new_pass
+        }
+        response = self.client.post(self.get_url(), data=data)
+        self.assertEqual(response.status_code, 200)
 
     def test_password_reset_procedure(self):
         """
@@ -150,7 +167,7 @@ class UserDetailsTest(TestCase):
             - password-reset link is accessible
             - form can be posted successfully from this link
             - an email is send to their with the site name in subject
-            - the link to reset password form is working 
+            - the link to reset password form is working
         """
         url_password_reset = reverse('password_reset')
         site_name = Site.objects.get(id=1).name
@@ -163,7 +180,7 @@ class UserDetailsTest(TestCase):
 
         # test POST response from password-reset
         response = self.client.post(
-            url_password_reset, data={'email': self.email})
+            url_password_reset, data={'email': self.user_data['email']})
         self.assertRedirects(
             response, expected_url=reverse('password_reset_done'))
 

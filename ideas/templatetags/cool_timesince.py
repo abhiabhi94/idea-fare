@@ -17,8 +17,8 @@ def cool_timesince(val, now=1):
 
     Params:
         val: a datetime object
-        now: int 
-            a constraint in ***minutes*** that decides for upto what values 'Just now' will be returned. 
+        now: int
+            a constraint in ***minutes*** that decides for upto what values 'Just now' will be returned.
     """
     if not val:
         return ''
@@ -27,7 +27,6 @@ def cool_timesince(val, now=1):
         diff = current_time - val
     except (ValueError, TypeError):
         return val
-    # print('difference:', diff)
     if diff <= timedelta(minutes=now):
         return 'Just now'
 

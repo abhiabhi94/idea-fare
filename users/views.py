@@ -1,11 +1,13 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
-from meta.views import Meta
-from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
+
+from meta.views import Meta
+
 from users.forms import UserRegisterForm, UserUpdateForm
-from users.manager import log_in_user
+from users.utils import log_in_user
 
 global meta_home
 meta_home = Meta(title='IdeaFare | Let us make the world a better place!',

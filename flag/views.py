@@ -11,7 +11,7 @@ from django.utils.html import escape
 from django.views.decorators.http import require_POST
 
 from flag.exceptions import FlagBadRequest
-from flag.models import add_flag, reason_values
+from flag.models import add_flag, FlagInstance
 
 def clean_reason(reason):
     """
@@ -30,7 +30,7 @@ def clean_reason(reason):
     except TypeError:
         FlagBadRequest(err_msg_reason)
 
-    if not reason or reason not in reason_values:
+    if not reason or (reason not in FlagInstance.reason_values):
         FlagBadRequest(err_msg_reason)
     return reason
 
@@ -90,7 +90,7 @@ def flag(request):
 
     comment = data.get('comment', None)
 
-    if reason == reason_values[-1] and not comment:
+    if reason == FlagInstance.reason_values[-1] and not comment:
         FlagBadRequest('Please provide some information why you choose to report the content')
 
     if not user_has_reported_this_content_earlier(request, content_object):

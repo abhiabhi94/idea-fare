@@ -6,7 +6,7 @@ from django.urls import path, include
 
 import debug_toolbar
 
-from decorators.guard import require_superuser
+from utils.decorators import require_superuser
 from users import views as user_views
 
 def dec_patterns(patterns):
