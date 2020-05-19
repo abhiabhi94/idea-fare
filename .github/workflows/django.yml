@@ -1,4 +1,4 @@
-name: Django CI
+name: Continous Integration
 
 on:
   push:
@@ -39,4 +39,9 @@ jobs:
         NAME: ${{ secrets.NAME }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
-        python manage.py test
+        export RECAPTCHA_DISABLE=TRUE
+        pip install coverage
+        coverage run --source='.' manage.py test
+        pip install django-extensions
+        python manage.py validate_templates
+        coverage report
