@@ -101,8 +101,8 @@ def add_flag(flagger, content_type, object_id, content_creator, reason, comment=
     defaults = {}
     if content_creator.pk is not None: # anonymous user # don't match username as username might be 'anonymous'
         defaults["creator"] = content_creator
-    if status is not None:
-        defaults['status'] = status
+    if state is not None:
+        defaults['state'] = state
 
     flagged_content, created = FlaggedContent.objects.get_or_create(
         content_type=content_type,
