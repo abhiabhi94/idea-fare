@@ -17,8 +17,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Secret Scan
-      uses: max/secret-scan@1.0.0
     - name: Python Syntax Checker
       uses: cclauss/Find-Python-syntax-errors-action@v0.2.0
     - name: Set up Python ${{ matrix.python-version }}
