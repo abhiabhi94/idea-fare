@@ -18,7 +18,7 @@ dnspython==1.16.0
 feedparser==5.2.1
 idna==2.9
 py3-validate-email==0.2.0
-python-akismet==0.4.1
+python-akismet==0.4.2
 pytz==2019.3
 requests==2.23.0
 six==1.14.0
