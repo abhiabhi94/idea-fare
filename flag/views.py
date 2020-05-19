@@ -6,12 +6,13 @@ from django.forms import forms
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from flag.exceptions import FlagBadRequest
-from flag.models import add_flag, FlagInstance
+from flag.models import FlagInstance, add_flag
+
 
 def clean_reason(reason):
     """

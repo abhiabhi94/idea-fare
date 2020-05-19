@@ -1,10 +1,11 @@
-from django.shortcuts import reverse, get_object_or_404
 from django.contrib.auth.models import User
-from django.core import mail
 from django.contrib.sites.models import Site
+from django.core import mail
+from django.shortcuts import get_object_or_404, reverse
 
-from users.forms import UserRegisterForm
 from tests.base import TestBase
+from users.forms import UserRegisterForm
+
 
 class TestUserRegistration(TestBase):
 

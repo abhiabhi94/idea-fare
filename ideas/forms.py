@@ -1,14 +1,14 @@
+from dal import autocomplete
 from django import forms
 from django.forms import ModelForm, Textarea, ValidationError
 from django.utils.translation import gettext_lazy as _
-
-from dal import autocomplete
 from fluent_comments.forms import FluentCommentForm
 from fluent_comments.models import FluentComment
 from snowpenguin.django.recaptcha3.fields import ReCaptchaField
 
 from ideas.models import Idea
 from utils.validators import email_verification
+
 
 class AnonymousIdeaCreateForm(ModelForm):
     """Form for anonymous users"""

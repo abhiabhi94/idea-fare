@@ -3,7 +3,6 @@ from django.contrib.contenttypes.models import ContentType
 
 from flag.models import FlagInstance
 
-
 register = template.Library()
 
 

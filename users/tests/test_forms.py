@@ -1,5 +1,6 @@
-from users.forms import UserRegisterForm
 from tests.base import TestBase
+from users.forms import UserRegisterForm
+
 
 class UserRegistrationFormTest(TestBase):
 

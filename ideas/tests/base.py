@@ -2,6 +2,7 @@ from abc import abstractmethod
 
 from tests.base import TestBaseView
 
+
 class TestIdeaBase(TestBaseView):
 
     @classmethod

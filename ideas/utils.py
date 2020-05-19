@@ -1,6 +1,7 @@
 """General purpose functions that provide utility throughout the application"""
 from ideas.models import Idea
 
+
 def process_idea_form(request, form):
     """
     Returns

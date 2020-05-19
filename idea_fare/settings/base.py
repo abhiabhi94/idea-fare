@@ -1,11 +1,12 @@
-import os
 import json
+import os
 import sys
+
+from setup.setup import (email_host_pass, email_host_user, project_name, recaptcha_private_key,  # nopep8
+                         recaptcha_public_key)
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
-from setup.setup import (project_name, email_host_user, email_host_pass,
-                 recaptcha_private_key, recaptcha_public_key)   # nopep8
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(

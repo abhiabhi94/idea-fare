@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from utils.validators import email_verification
 
+
 class TestValidators(TestCase):
 
     def test_email_verification_for_bogus_emails(self):
@@ -15,4 +16,3 @@ class TestValidators(TestCase):
         test_data = ['jachkarta@gmail.com', 'jach.karta@gmail.com', 'jach.karta+tester@gmail.com']
         for data in test_data:
             self.assertEqual(True, email_verification(data))
-

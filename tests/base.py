@@ -1,5 +1,5 @@
-from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 
 from ideas.models import Idea
 
@@ -40,7 +40,3 @@ class TestBaseView(TestBase):
     def setUp(self) -> None:
         """Log in the user"""
         self.client.force_login(self.user)
-
-
-
-

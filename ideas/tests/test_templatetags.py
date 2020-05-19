@@ -1,13 +1,14 @@
 import unicodedata
 from datetime import timedelta
 
-from django.template import Template, Context
+from django.template import Context, Template
 from django.utils import timezone
 
 from ideas.templatetags.cool_num import cool_num
 from ideas.templatetags.cool_timesince import cool_timesince
 from ideas.templatetags.define import define
 from tests.base import TestBase
+
 
 class TestTemplateTags(TestBase):
     def compare_strs(self, s1, s2):

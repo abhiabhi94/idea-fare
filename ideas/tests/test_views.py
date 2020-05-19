@@ -1,11 +1,12 @@
 import feedparser
-from django.shortcuts import reverse
-from django.contrib.auth.models import User, AnonymousUser
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser, User
+from django.shortcuts import reverse
 
 from ideas.models import Idea
 from ideas.tests.base import TestIdeaBase
 from tests.base import TestBase
+
 
 class TestAboutPage(TestBase):
     def test_about_page(self):

@@ -1,25 +1,19 @@
-from django.core.exceptions import PermissionDenied
+from dal import autocomplete
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
+from django.core.exceptions import PermissionDenied
 from django.db.utils import IntegrityError
-from django.http.response import HttpResponseBadRequest, JsonResponse
 from django.http import Http404
+from django.http.response import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
-from django.views.generic import (CreateView,
-                                  DetailView,
-                                  UpdateView,
-                                  DeleteView,
-                                  ListView
-                                  )
-
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from meta.views import Meta
-from dal import autocomplete
 from taggit.models import Tag
 
 from ideas.forms import AnonymousIdeaCreateForm, NonAnonymousIdeaCreateForm
@@ -27,7 +21,6 @@ from ideas.models import Idea
 from ideas.utils import process_idea_form
 from subscribers.models import Subscriber
 from utils.validators import email_verification
-
 
 global paginate_by
 paginate_by = 15

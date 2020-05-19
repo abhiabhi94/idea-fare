@@ -2,8 +2,8 @@ from django import forms
 from django.contrib.auth.forms import User, UserCreationForm
 from snowpenguin.django.recaptcha3.fields import ReCaptchaField
 
-from utils.validators import email_verification
 from ideas.mixins import CleanUserDetailsMixin
+from utils.validators import email_verification
 
 
 class UserRegisterForm(UserCreationForm, CleanUserDetailsMixin):

@@ -1,6 +1,7 @@
 """General purpose useful validators"""
 from validate_email import validate_email
 
+
 def email_verification(email):
     """
     Verify whether an email is legit or not.

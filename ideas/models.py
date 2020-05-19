@@ -1,12 +1,11 @@
 import secrets
 
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
-
 from fluent_comments.models import FluentComment
 from taggit.managers import TaggableManager
 from urlextract import URLExtract
@@ -20,7 +19,6 @@ MAX_SLUG_LENGTH = 80
 LENGTH_OF_RANDOM_ALPHANUMERIC_SLUG = 4
 
 AnonymousUser.username = 'anonymous'
-
 
 class Idea(models.Model):
     # allow anonymous posting

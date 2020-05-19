@@ -3,7 +3,6 @@
 import os
 import sys
 
-
 project_name = os.getenv('NAME', None)
 if project_name is None:
     sys.exit('Add an environment variable NAME as the name of this project')
