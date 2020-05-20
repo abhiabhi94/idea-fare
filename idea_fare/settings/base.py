@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     ##############################
+    'django_extensions',
     'meta',
     'crispy_forms',
     'fluent_comments',
@@ -145,9 +146,14 @@ TAGGIT_CASE_INSENSITIVE = True
 ##############################################################################
 
 ################ Django-recaptcha3############################
-RECAPTCHA_PRIVATE_KEY = recaptcha_private_key 
+RECAPTCHA_PRIVATE_KEY = recaptcha_private_key
 RECAPTCHA_PUBLIC_KEY = recaptcha_public_key
 RECAPTCHA_DEFAULT_ACTION = 'generic'
 RECAPTCHA_SCORE_THRESHOLD = 0.5
-
 ##############################################################################
+
+##################### django_extensions######################################
+# ignore templates inside site packages
+
+VALIDATE_TEMPLATES_IGNORES = '*site-packages/fluent_comments/templates/fluent_comments/templatetags/ajax_comment_tags.html'
+###################################################################

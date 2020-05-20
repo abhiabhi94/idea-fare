@@ -12,6 +12,6 @@ class TestValidators(TestBase):
 
     def test_email_verification_for_true_emails(self):
         """Test email verification for true emails"""
-        test_data = self.valid_emails
+        test_data = [self.get_email() for i in range(3)]
         for data in test_data:
             self.assertEqual(True, email_verification(data))

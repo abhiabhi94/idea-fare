@@ -2,6 +2,7 @@ import os
 
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.conf import settings
 from django.core import mail
 from django.shortcuts import get_object_or_404, reverse
 
@@ -13,34 +14,34 @@ class TestUserRegistration(TestBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.email = self.get_unique_email()
         self.username = 'tester_1'
-        self.valid_email_string = os.environ.get('VALID_EMAILS', None)
-        if self.valid_email_string is not None:
-            self.valid_emails = self.valid_email_string.lower().split()
         self.first_name = 'Jach'
         self.last_name = 'Karta'
         self.password = 'user123#'
 
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
         """Initialise the form data"""
-        super().setUpTestData()
+        super().setUp()
         # create a user for testing purpose
         form = UserRegisterForm(data={
-            'username': 'Tester_1',
-            'first_name': 'Jach',
-            'email': cls.valid_emails[2],
-            'password1': 'user123#',
-            'password2': 'user123#',
+            'username': self.username.upper(),
+            'first_name': self.first_name,
+            'email': self.email.upper(),
+            'password1': self.password,
+            'password2': self.password,
         })
         form.save()
+
+    def get_url(self):
+        return reverse('register')
 
     def test_correct_template_used_for_register(self):
         """
         Test if correct template is used for the register url
         """
         # Testing register
-        register = self.client.get(reverse('register'))
+        register = self.client.get(self.get_url())
         # Test HTTP response
         self.assertEqual(register.status_code, 200)
         self.assertTemplateUsed(
@@ -78,17 +79,17 @@ class TestUserRegistration(TestBase):
         data = {
             'username': 'tester_11',
             'first_name': 'Jach',
-            'email': self.valid_emails[1],
+            'email': self.get_unique_email(),
             'password1': 'user123#',
             'password2': 'user123#',
         }
-        response = self.client.post(reverse('register'), data=data)
+        response = self.client.post(self.get_url(), data=data)
         self.assertRedirects(response, expected_url=reverse('ideas:home'))
 
     def test_redirect_authenticated_user_on_register(self):
         """Test whether a logged in user is redirected to home when trying to access register link"""
         self.client.force_login(self.user)
-        response = self.client.get(reverse('register'))
+        response = self.client.get(self.get_url())
         self.assertRedirects(response, expected_url=reverse('ideas:home'))
 
 class TestProfileView(TestBase):
@@ -97,8 +98,9 @@ class TestProfileView(TestBase):
 
     def test_redirect_unauthenticated_user_on_profile(self):
         """Test whether a logged in user is redirected to home when trying to access register link"""
-        response = self.client.get(self.get_url())
-        self.assertRedirects(response, expected_url='/login/?next=/profile/')
+        url = self.get_url()
+        response = self.client.get(url)
+        self.assertRedirects(response, expected_url=f'/{settings.LOGIN_URL}/?next={url}')
 
     def test_profile_updation(self):
         """
@@ -111,7 +113,7 @@ class TestProfileView(TestBase):
             'username': 'tester2',
             'first_name': 'Jachi',
             'last_name': 'karta',
-            'email': self.valid_emails[0],
+            'email': self.get_unique_email(),
         }
         self.client.force_login(self.user)
         url_profile = self.get_url()
@@ -125,10 +127,12 @@ class TestProfileView(TestBase):
         profile_post = self.client.post(url_profile, data=new_data)
         # Test HTTP response
         self.assertEqual(profile_post.status_code, 200)
+        # form has no errors
+        self.assertEqual(True, profile_post.context['form'].is_valid())
 
         user = get_object_or_404(User, username=new_data['username'])
 
-        # Test profile values
+        # Test profile values from the database
         self.assertEqual(user.username, new_data['username'])
         self.assertEqual(user.first_name, new_data['first_name'])
         self.assertEqual(user.last_name, new_data['last_name'])
