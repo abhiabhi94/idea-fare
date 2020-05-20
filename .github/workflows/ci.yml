@@ -34,6 +34,5 @@ jobs:
       run: |
         pip install coverage
         coverage run --source='.' --omit='*tests*' manage.py test
-        pip install django-extensions
-        python manage.py validate_templates
+        python manage.py validate_template
         coverage report
