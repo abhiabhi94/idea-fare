@@ -32,9 +32,8 @@ jobs:
         NAME: ${{ secrets.NAME }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
-        export RECAPTCHA_DISABLE=TRUE
         pip install coverage
-        coverage run --source='.' manage.py test
+        coverage run --source='.' --omit='*tests*' manage.py test
         pip install django-extensions
         python manage.py validate_templates
         coverage report

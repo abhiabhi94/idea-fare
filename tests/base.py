@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
@@ -6,6 +8,10 @@ from ideas.models import Idea
 User = get_user_model()
 
 class TestBase(TestCase):
+
+    def setUp(self):
+        """Set the environment variable to disable RECAPTCHA"""
+        os.environ['RECAPTCHA_DISABLE'] = 'True'
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -39,4 +45,5 @@ class TestBase(TestCase):
 class TestBaseView(TestBase):
     def setUp(self) -> None:
         """Log in the user"""
+        super().setUp()
         self.client.force_login(self.user)
