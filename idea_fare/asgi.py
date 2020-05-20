@@ -12,7 +12,7 @@ import sys
 
 from django.core.asgi import get_asgi_application
 
-from setup.setup import project_name
+from config.config import project_name
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       '{}.settings'.format(project_name))

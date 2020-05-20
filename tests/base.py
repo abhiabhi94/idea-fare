@@ -42,7 +42,7 @@ class TestBase(TestCase):
             str
         """
         variable = 'VALID_EMAIL'
-        email = os.environ.get(variable, None)
+        email = os.getenv(variable)
         if not email:
             sys.exit(f'Please set an environment variable {variable} as a valid email. It will be used for testing.')
         return email.strip().lower()

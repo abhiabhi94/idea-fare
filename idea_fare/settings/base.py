@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-from setup.setup import (email_host_pass, email_host_user, project_name, recaptcha_private_key,  # nopep8
+from config.config import (email_host_pass, email_host_user, project_name, recaptcha_private_key,  # nopep8
                          recaptcha_public_key)
 
 # Just a hack to find wayaround relative imports

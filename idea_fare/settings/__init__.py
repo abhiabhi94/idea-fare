@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-from setup.setup import *  # nopep8
+from config.config import *  # nopep8
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')

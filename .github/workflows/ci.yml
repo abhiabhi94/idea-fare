@@ -31,6 +31,7 @@ jobs:
       env:
         NAME: ${{ secrets.NAME }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        VALID_EMAIL: ${{ secrets.VALID_EMAIL }}
       run: |
         pip install coverage
         coverage run --source='.' --omit='*tests*' manage.py test
