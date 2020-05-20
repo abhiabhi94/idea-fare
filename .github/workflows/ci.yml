@@ -34,5 +34,5 @@ jobs:
       run: |
         pip install coverage
         coverage run --source='.' --omit='*tests*' manage.py test
-        python manage.py validate_template
+        python manage.py validate_templates
         coverage report
