@@ -1,9 +1,8 @@
-from unittest import TestCase
-
+from tests.base import TestBase
 from utils.validators import email_verification
 
 
-class TestValidators(TestCase):
+class TestValidators(TestBase):
 
     def test_email_verification_for_bogus_emails(self):
         """Test email verification for bogus emails"""
@@ -13,6 +12,6 @@ class TestValidators(TestCase):
 
     def test_email_verification_for_true_emails(self):
         """Test email verification for true emails"""
-        test_data = ['jachkarta@gmail.com', 'jach.karta@gmail.com', 'jach.karta+tester@gmail.com']
+        test_data = self.valid_emails
         for data in test_data:
             self.assertEqual(True, email_verification(data))

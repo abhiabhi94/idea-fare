@@ -17,15 +17,25 @@ class TestBase(TestCase):
     def setUpClass(cls) -> None:
         """Initialize all global testing data here."""
         super().setUpClass()
+
+        cls.valid_email_string = os.environ.get('VALID_EMAILS', None)
+        if cls.valid_email_string is not None:
+            cls.valid_emails = cls.valid_email_string.lower().split()
+
         cls.user_data = {
             'username': 'tester',
-            'email':'jach.karta@gmail.com',
+            'email': cls.valid_emails[0],
             'password':'user123#',
             'first_name':'Jach',
             'last_name':'Karta'
         }
         cls.user = User.objects.create(**cls.user_data)
         cls.ideas = 0
+
+    def get_valid_emails():
+        valid_email_string = os.environ.get('VALID_EMAILS', None)
+        if valid_email_string is not None:
+            return valid_email_string.lower().split()
 
     @classmethod
     def create_user(cls, *args, **kwargs) -> User:

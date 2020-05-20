@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core import mail
@@ -12,7 +14,9 @@ class TestUserRegistration(TestBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.username = 'tester_1'
-        self.email = 'jachkarta@gmail.com'
+        self.valid_email_string = os.environ.get('VALID_EMAILS', None)
+        if self.valid_email_string is not None:
+            self.valid_emails = self.valid_email_string.lower().split()
         self.first_name = 'Jach'
         self.last_name = 'Karta'
         self.password = 'user123#'
@@ -25,7 +29,7 @@ class TestUserRegistration(TestBase):
         form = UserRegisterForm(data={
             'username': 'Tester_1',
             'first_name': 'Jach',
-            'email': 'Jachkarta@gmail.com',
+            'email': cls.valid_emails[2],
             'password1': 'user123#',
             'password2': 'user123#',
         })
@@ -74,7 +78,7 @@ class TestUserRegistration(TestBase):
         data = {
             'username': 'tester_11',
             'first_name': 'Jach',
-            'email': 'jachkarta+test@gmail.com',
+            'email': self.valid_emails[1],
             'password1': 'user123#',
             'password2': 'user123#',
         }
@@ -107,7 +111,7 @@ class TestProfileView(TestBase):
             'username': 'tester2',
             'first_name': 'Jachi',
             'last_name': 'karta',
-            'email': 'jachkarta+test1@gmail.com',
+            'email': self.valid_emails[0],
         }
         self.client.force_login(self.user)
         url_profile = self.get_url()

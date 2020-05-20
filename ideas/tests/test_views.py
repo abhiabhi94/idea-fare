@@ -85,7 +85,7 @@ class TestSubscription(TestBase):
 
     def test_subscription_with_real_email(self):
         """Test whether genuine emails can be used for subscription"""
-        response = self.request(data={'email': 'jachkarta@gmail.com'})
+        response = self.request(data={'email': self.valid_emails[0]})
         self.assertEqual(response.status_code, 200)
         response = response.json()
         self.assertEqual(response['status'], 0)
@@ -95,9 +95,9 @@ class TestSubscription(TestBase):
     def test_subscription_integrity(self):
         """Test that 1 email can only be used to subscribe once"""
         # First subscribe with the email
-        response = self.request(data={'email': 'jachkarta@gmail.com'})
+        response = self.request(data={'email': self.valid_emails[0]})
         # Now test subscribing again
-        response = self.request(data={'email': 'jachkarta@gmail.com'})
+        response = self.request(data={'email': self.valid_emails[0]})
         self.assertEqual(response.status_code, 200)
         response = response.json()
         self.assertEqual(response['status'], -1)
