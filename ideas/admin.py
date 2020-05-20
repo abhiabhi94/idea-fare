@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from ideas.models import Idea, IdeaComment
+from ideas.models import Idea
 
 
 class IdeaAdmin(admin.ModelAdmin):
@@ -11,11 +11,7 @@ class IdeaAdmin(admin.ModelAdmin):
 
     list_filter = ['visibility', ]
 
-class IdeaCommentAdmin(admin.ModelAdmin):
-    readonly_fields = ['flag']
-    list_display = ['comment']
-
+    def get_queryset(self, *args, **kwargs):
+        return Idea.public_objects.all()
 
 admin.site.register(Idea, IdeaAdmin)
-admin.site.register(IdeaComment, IdeaCommentAdmin)
-

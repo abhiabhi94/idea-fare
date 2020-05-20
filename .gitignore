@@ -15,3 +15,6 @@ assets/**
 
 # media files
 media/**
+
+#coverage
+.coverage

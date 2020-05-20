@@ -1,13 +1,13 @@
+import debug_toolbar
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import path, include
+from django.urls import include, path
 
-import debug_toolbar
-
-from decorators.guard import require_superuser
 from users import views as user_views
+from utils.decorators import require_superuser
+
 
 def dec_patterns(patterns):
     decorated_patterns = []

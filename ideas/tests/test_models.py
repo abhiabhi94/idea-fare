@@ -1,35 +1,31 @@
-from django.test import TestCase
-from django.shortcuts import reverse
 from django.contrib.auth.models import User
+from django.shortcuts import reverse
+
 from ideas.models import Idea
+from tests.base import TestBase
 
 
-class IdeaModelTest(TestCase):
+class IdeaModelTest(TestBase):
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpClass(cls):
         """
         Initialise data for all tests
         - Create an anonymous idea
         - Create a user and associate them with a new idea.
         """
+        super().setUpClass()
         # Create an anonymous idea
-        cls.anonymous_idea = Idea.objects.create(title='This is a test idea',
-                                                 concept='Wow this is really awesome',
-                                                 )
-
-        # Create a user
-        user = User.objects.create_user(username='tester1',
-                                        email='jach.karta@gmail.com',
-                                        password='user123#',
-                                        first_name='Jach',
-                                        last_name='Karta'
-                                        )
+        cls.anonymous_idea = cls.create_idea(
+                                            title='This is a test idea',
+                                            concept='Wow this is really awesome',
+                                            )
         # Create an idea with a user
-        cls.non_anonymous_idea = Idea.objects.create(title='This is another idea',
-                                                     concept='This seems fun',
-                                                     user=user
-                                                     )
+        cls.non_anonymous_idea = cls.create_idea(
+                                                title='This is another idea',
+                                                concept='This seems fun',
+                                                user=cls.user
+                                                )
 
     def test_max_length_title(self):
         """Test max length for title of an idea is 60"""

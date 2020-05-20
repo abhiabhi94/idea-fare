@@ -8,9 +8,10 @@ https://docs.djangoproject.com/en/3.0/howto/deployment/wsgi/
 """
 
 import os
-from setup.setup import project_name
 
 from django.core.wsgi import get_wsgi_application
+
+from config.config import project_name
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                         '{}.settings'.format(project_name))

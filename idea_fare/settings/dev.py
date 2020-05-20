@@ -1,7 +1,8 @@
-from subprocess import getoutput
-import urllib.request
-from urllib.error import URLError
 import sys
+import urllib.request
+from subprocess import getoutput
+from urllib.error import URLError
+
 from .base import *
 
 global ALLOWED_HOSTS

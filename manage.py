@@ -2,7 +2,8 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from setup.setup import project_name
+
+from config.config import project_name
 
 
 def main():

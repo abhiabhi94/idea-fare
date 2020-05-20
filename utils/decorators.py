@@ -1,6 +1,8 @@
+"""General purpose project wise useful decorators"""
 from functools import wraps
 
 from django.http import Http404
+
 
 def require_superuser(func):
     """Redirects non superusers to a 404 page"""

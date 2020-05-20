@@ -1,8 +1,7 @@
 from django import template
 from django.contrib.contenttypes.models import ContentType
 
-from flag.models import reasons
-
+from flag.models import FlagInstance
 
 register = template.Library()
 
@@ -27,5 +26,5 @@ def render_flag_form(context, content_object, creator_field):
         "creator_field": creator_field,
         "request": request,
         "user": request.user,
-        "flag_reasons": reasons
+        "flag_reasons": FlagInstance.reasons
     }

@@ -8,5 +8,3 @@ app_name = 'flag'
 urlpatterns = [
     path('', flag, name='flag'),
 ]
-
-

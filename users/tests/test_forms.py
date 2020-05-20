@@ -1,8 +1,8 @@
-from django.test import TestCase
+from tests.base import TestBase
 from users.forms import UserRegisterForm
 
 
-class UserRegistrationFormTest(TestCase):
+class UserRegistrationFormTest(TestBase):
 
     def test_email_invalidates_dummy_emails(self):
         """Test whether email field invalidates dummy emails and raises a validation error"""

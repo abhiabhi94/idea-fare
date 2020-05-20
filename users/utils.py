@@ -1,8 +1,4 @@
-"""
-Module contains functions that will be re-usable inside applications.
-Ideally, the logical part (apart from that written in models)\
-    in views should be placed here.
-"""
+"""General purpose useful utlity functions throughout the applications"""
 from django.contrib import messages
 from django.contrib.auth import login
 from django.utils.translation import gettext_lazy as _

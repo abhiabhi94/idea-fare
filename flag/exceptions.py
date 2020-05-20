@@ -5,6 +5,7 @@ from django.http import HttpResponseBadRequest
 from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
 
+
 ## Most of this code is copied from django-contrib-comments
 class FlagBadRequest(HttpResponseBadRequest):
     """
