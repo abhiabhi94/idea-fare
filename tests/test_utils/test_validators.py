@@ -7,7 +7,7 @@ class TestValidators(TestCase):
 
     def test_email_verification_for_bogus_emails(self):
         """Test email verification for bogus emails"""
-        test_data = ['abcd@abcd.com', 'abcd+bc', '84@abc.com']
+        test_data = ['ab@ab.com']
         for data in test_data:
             self.assertEqual(False, email_verification(data))
 
