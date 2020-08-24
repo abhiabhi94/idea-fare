@@ -32,9 +32,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'meta',
     'crispy_forms',
-    'fluent_comments',
-    'django_comments',
-    'threadedcomments',
     'taggit',
     'snowpenguin.django.recaptcha3',
     ################################
@@ -131,15 +128,6 @@ if email_host_user is not None:
     EMAIL_HOST_USER = email_host_user
     EMAIL_HOST_PASSWORD = email_host_pass
 
-##########################################################################
-
-############# django_fluent_comments######################################
-COMMENTS_APP = 'fluent_comments'
-FLUENT_COMMENTS_FORM_CLASS = 'ideas.forms.CommentForm'
-FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title')
-
-###############################################################################
-
 ################ Django-taggit############################
 TAGGIT_CASE_INSENSITIVE = True
 
@@ -151,9 +139,3 @@ RECAPTCHA_PUBLIC_KEY = recaptcha_public_key
 RECAPTCHA_DEFAULT_ACTION = 'generic'
 RECAPTCHA_SCORE_THRESHOLD = 0.5
 ##############################################################################
-
-##################### django_extensions######################################
-# ignore templates inside site packages
-
-VALIDATE_TEMPLATES_IGNORES = '*site-packages/fluent_comments/templates/fluent_comments/templatetags/ajax_comment_tags.html'
-###################################################################

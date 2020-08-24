@@ -1,12 +1,13 @@
 import secrets
 
-from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
-from fluent_comments.models import FluentComment
+from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager
 from urlextract import URLExtract
 
@@ -18,6 +19,7 @@ MAX_CONCEPT_LENGTH = 500
 MAX_SLUG_LENGTH = 80
 LENGTH_OF_RANDOM_ALPHANUMERIC_SLUG = 4
 
+User = get_user_model()
 AnonymousUser.username = 'anonymous'
 
 class Idea(models.Model):
@@ -25,14 +27,14 @@ class Idea(models.Model):
     user = models.ForeignKey(User, blank=True, db_column='conceiver',
                              null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=MAX_TITLE_LENGTH,
-                             help_text='Try to keep this short and sweet. Max 60 characters'
+                             help_text=_('Try to keep this short and sweet. Max 60 characters')
                              )
     concept = models.CharField(max_length=MAX_CONCEPT_LENGTH,
-                               help_text='Try to explain your idea in a concise form. Max 500 characters')
+                               help_text=_('Try to explain your idea in a concise form. Max 500 characters'))
     date_created = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
-    visibility = models.BooleanField(verbose_name='public', default=True)
+    visibility = models.BooleanField(verbose_name=_('public'), default=True)
     flag = GenericRelation(FlaggedContent, related_query_name='idea_flagged')
 
     objects = models.Manager()

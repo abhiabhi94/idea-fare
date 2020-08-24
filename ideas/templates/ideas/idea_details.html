@@ -1,12 +1,8 @@
 {% extends "ideas/base.html" %}
 {% load static %}
 {% load i18n %}
-{% load comments static %}
 {% load flag_tags %}
 {% block extrahead %}
-<link rel="stylesheet"
-  type="text/css"
-  href="{% static 'fluent_comments/css/ajaxcomments.css' %}"/>
 <link rel="stylesheet"
   type="text/css"
   href="{% static 'flag/css/flag_style.css' %}"/>
@@ -51,31 +47,12 @@
                 <div class="idea-tags manage-overflow">
                   {% include "tags.html" with tags=idea.get_tags_list %}
                 </div>
-                <div class="idea-comments">
-                    {% get_comment_count for idea as comment_count %}
-                    <div class="py-3 text-center">
-                        <a href="{% url 'ideas:home' %}">{% trans "Return Home" %}</a>
-                        &nbsp;&sdot;&nbsp;
-                        {{ comment_count }} {% trans "comment" %}{{ comment_count|pluralize }}
-                        {% trans "ha" %}{{ comment_count|pluralize:"s,ve" }} {% trans "been posted." %}
-                    </div>
-
-                    <div class="idea-comment-list">
-                        {% render_comment_list for idea %}
-                    <div class="idea-comment-form">
-                        <h4 class="card-title text-center pb-3">{% trans "Post your comment" %}</h4>
-                        {% render_comment_form for idea %}
-                    </div>
-                </div>
             </div>
         </article>
     </div>
 </div>
 {% endblock content %}
 {% block extrabottom %}
-<script
-  type="text/javascript"
-  src="{% static 'fluent_comments/js/ajaxcomments.js' %}"></script>
 <script
   type="text/javascript"
   src="{% static 'flag/js/flag_main.js' %}"></script>

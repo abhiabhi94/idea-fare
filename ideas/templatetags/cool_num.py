@@ -1,4 +1,5 @@
 from django import template
+from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
 
@@ -22,7 +23,7 @@ def cool_num(val, precision=2):
         int_val = int(val)
     except ValueError:
         raise template.TemplateSyntaxError(
-            f'Value must be an integer. {val} is not an integer')
+            _(f'Value must be an integer. {val} is not an integer'))
     if int_val < 1000:
         return str(int_val)
     elif int_val < 1_000_000:
