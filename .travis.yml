@@ -1,0 +1,14 @@
+language: python
+python:
+    - 3.7
+env:
+    - NAME=idea_fare
+install:
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+script:
+    - python manage.py makemigrations
+    - pip install coverage
+    - python manage.py test
+after_success:
+    - coveralls

@@ -1,0 +1,6 @@
+[run]
+branch = True
+include =
+    ./idea_fare/*
+omit =
+    ./idea_fare/tests/*
