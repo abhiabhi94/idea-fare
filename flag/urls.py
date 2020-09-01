@@ -1,10 +1,9 @@
 from django.urls import path
-from django.views.generic import TemplateView
 
-from flag.views import flag
+from flag.views import SetFlag
 
 app_name = 'flag'
 
 urlpatterns = [
-    path('', flag, name='flag'),
+    path('', SetFlag.as_view(), name='flag'),
 ]

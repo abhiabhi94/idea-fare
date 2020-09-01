@@ -1,6 +1,7 @@
+from unittest.mock import patch
+
 import feedparser
-from django.conf import settings
-from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import reverse
 
 from ideas.models import Idea
@@ -15,6 +16,7 @@ class TestAboutPage(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'ideas/about.html')
 
+
 class TestContentPolicyPage(TestBase):
     def test_content_policy_page(self):
         """Test whether content policy page link is working"""
@@ -22,12 +24,14 @@ class TestContentPolicyPage(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'ideas/content_policy.html')
 
+
 class TestPrivacyPolicyPage(TestBase):
     def test_privacy_policy_page(self):
         """Test whether privacy policy page link is working"""
         response = self.client.get(reverse('ideas:privacy-policy'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'ideas/privacy_policy.html')
+
 
 class TestSubscription(TestBase):
     def get_url(self):
@@ -57,7 +61,7 @@ class TestSubscription(TestBase):
         return request_method(url, *args, **kwargs)
 
     def test_subscription_with_non_ajax(self):
-        """Test whether dummy emails can't be used for subscription"""
+        """Test whether non AJAX requests be used for subscription"""
         response = self.request(is_ajax=False, data={'email': 'a@a.com'})
         self.assertEqual(response.status_code, 400)
 
@@ -66,34 +70,31 @@ class TestSubscription(TestBase):
         response = self.request(method='get', data={'email': 'a@a.com'})
         self.assertEqual(response.status_code, 405)
 
-    def test_subscription_with_dummy_email(self):
+    @patch('utils.validators.is_email_valid')
+    def test_subscription_with_dummy_email(self, mocked_attr):
         """Test whether dummy emails can't be used for subscription"""
+        mocked_attr.return_value = False
         response = self.request(data={'email': 'a@a.com'})
         self.assertEqual(response.status_code, 200)
         response = response.json()
         self.assertEqual(response['status'], -1)
         self.assertEqual('not a valid' in response['msg'], True)
 
-
-    def test_subscription_with_dummy_email(self):
-        """Test whether dummy emails can't be used for subscription"""
-        response = self.request(data={'email': 'a@a.com'})
-        self.assertEqual(response.status_code, 200)
-        response = response.json()
-        self.assertEqual(response['status'], -1)
-        self.assertEqual('not a valid' in response['msg'], True)
-
-    def test_subscription_with_real_email(self):
+    @patch('utils.validators.is_email_valid')
+    def test_subscription_with_real_email(self, mocked_attr):
         """Test whether genuine emails can be used for subscription"""
+        mocked_attr.return_value = True
         response = self.request(data={'email': self.email})
         self.assertEqual(response.status_code, 200)
         response = response.json()
         self.assertEqual(response['status'], 0)
-        self.assertNotEqual('not' in response['msg'], True)
+        self.assertEqual('not' in response['msg'], False)
         self.assertEqual('success' in response['msg'], True)
 
-    def test_subscription_integrity(self):
+    @patch('utils.validators.is_email_valid')
+    def test_subscription_integrity(self, mocked_attr):
         """Test that 1 email can only be used to subscribe once"""
+        mocked_attr.return_value = True
         # First subscribe with the email
         response = self.request(data={'email': self.email})
         # Now test subscribing again
@@ -102,6 +103,7 @@ class TestSubscription(TestBase):
         response = response.json()
         self.assertEqual(response['status'], -1)
         self.assertEqual('already registered' in response['msg'], True)
+
 
 class TestHomeView(TestIdeaBase):
     """
@@ -138,6 +140,7 @@ class TestHomeView(TestIdeaBase):
         response = self.client.get(self.get_url())
         [self.assertEqual(idea.visibility, True)
          for idea in response.context['ideas']]
+
 
 class TestAnonymousIdeaCreateView(TestIdeaBase):
     """
@@ -188,6 +191,7 @@ class TestAnonymousIdeaCreateView(TestIdeaBase):
         })
         # Can't use assertRedirect since we are not sure about the redirected url
         self.assertEqual(response.status_code, 302)
+
 
 class TestNonAnonymousIdeaCreateView(TestIdeaBase):
     """
@@ -250,7 +254,6 @@ class TestNonAnonymousIdeaCreateView(TestIdeaBase):
         # Can't use assertRedirect since we are not sure about the redirected url
         self.assertEqual(response.status_code, 302)
 
-    #########################################################################################
 
 class TestIdeaUpdateView(TestIdeaBase):
     """
@@ -274,7 +277,6 @@ class TestIdeaUpdateView(TestIdeaBase):
         if not slug:
             slug = self.get_slug()
         return reverse('ideas:idea-update', kwargs={'slug': slug})
-
 
     def test_idea_update_view_for_unauthenticated_user(self):
         """Test unauthenticated users are redirected to login page"""
@@ -316,6 +318,7 @@ class TestIdeaUpdateView(TestIdeaBase):
         })
         # Can't use assertRedirect since we are not sure about the redirected url
         self.assertEqual(response.status_code, 302)
+
 
 class TestIdeaDeleteView(TestIdeaBase):
     """
@@ -380,6 +383,7 @@ class TestIdeaDeleteView(TestIdeaBase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
+
 class TestIdeaDetailView(TestIdeaBase):
     """
     For IdeaDetailView, test
@@ -425,6 +429,7 @@ class TestIdeaDetailView(TestIdeaBase):
         slug = Idea.objects.get(id=10).slug
         response = self.client.get(self.get_url(slug))
         self.assertTrue(response.status_code, 200)
+
 
 class TestConceiverIdeaListView(TestIdeaBase):
     """
@@ -475,6 +480,7 @@ class TestConceiverIdeaListView(TestIdeaBase):
         self.assertEqual('is_paginated' in response.context, True)
         self.assertEqual(response.context['is_paginated'], True)
         self.assertEqual(len(response.context['ideas']), 15)
+
 
 class TestLatestIdeaRSSFeed(TestIdeaBase):
     """

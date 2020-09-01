@@ -1,8 +1,8 @@
-import os
+from unittest.mock import patch
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.conf import settings
 from django.core import mail
 from django.shortcuts import get_object_or_404, reverse
 
@@ -20,9 +20,11 @@ class TestUserRegistration(TestBase):
         self.last_name = 'Karta'
         self.password = 'user123#'
 
-    def setUp(self):
+    @patch('utils.validators.is_email_valid')
+    def setUp(self, mocked_attr):
         """Initialise the form data"""
         super().setUp()
+        mocked_attr.return_value = True
         # create a user for testing purpose
         form = UserRegisterForm(data={
             'username': self.username.upper(),
@@ -36,10 +38,12 @@ class TestUserRegistration(TestBase):
     def get_url(self):
         return reverse('register')
 
-    def test_correct_template_used_for_register(self):
+    @patch('utils.validators.is_email_valid')
+    def test_correct_template_used_for_register(self, mocked_attr):
         """
         Test if correct template is used for the register url
         """
+        mocked_attr.return_value = True
         # Testing register
         register = self.client.get(self.get_url())
         # Test HTTP response
@@ -55,17 +59,21 @@ class TestUserRegistration(TestBase):
         user = User.objects.get(email=email)
         self.assertEqual(user.username, username.lower())
 
-    def test_email_case_insensitive(self):
+    @patch('utils.validators.is_email_valid')
+    def test_email_case_insensitive(self, mocked_attr):
         """Test whether email field is case insensitive"""
+        mocked_attr.return_value = True
         email = self.email
         username = self.username
 
         user = User.objects.get(username=username)
         self.assertEqual(user.email, email.lower())
 
-    def test_email_integrity(self):
-        """Test invalidation for use of 1 email by more than 1 accounts,\
+    @patch('utils.validators.is_email_valid')
+    def test_email_integrity(self, mocked_attr):
+        """Test invalidation for use of 1 email by more than 1 accounts,
             raising of appropriate validation error"""
+        mocked_attr.return_value = True
         email = self.email
 
         form = UserRegisterForm(data={'email': email, 'username': 'test'})
@@ -74,8 +82,10 @@ class TestUserRegistration(TestBase):
         # Test if validation error is raised
         self.assertEqual(form.has_error('email', code='invalid'), True)
 
-    def test_redirect_on_successful_registration(self):
+    @patch('utils.validators.is_email_valid')
+    def test_redirect_on_successful_registration(self, mocked_attr):
         """Test redirect to home page on successful registration"""
+        mocked_attr.return_value = True
         data = {
             'username': 'tester_11',
             'first_name': 'Jach',
@@ -92,6 +102,7 @@ class TestUserRegistration(TestBase):
         response = self.client.get(self.get_url())
         self.assertRedirects(response, expected_url=reverse('ideas:home'))
 
+
 class TestProfileView(TestBase):
     def get_url(self):
         return reverse('profile')
@@ -102,13 +113,15 @@ class TestProfileView(TestBase):
         response = self.client.get(url)
         self.assertRedirects(response, expected_url=f'/{settings.LOGIN_URL}/?next={url}')
 
-    def test_profile_updation(self):
+    @patch('utils.validators.is_email_valid')
+    def test_profile_updation(self, mocked_attr):
         """
         Test whether
             - profile urls loads successfully
             - correct template is used for rendering
             - data is updated successfully on post request
         """
+        mocked_attr.return_value = True
         new_data = {
             'username': 'tester2',
             'first_name': 'Jachi',
@@ -137,6 +150,7 @@ class TestProfileView(TestBase):
         self.assertEqual(user.first_name, new_data['first_name'])
         self.assertEqual(user.last_name, new_data['last_name'])
         self.assertEqual(user.email, new_data['email'])
+
 
 class TestPasswordChangeView(TestBase):
     def get_url(self):

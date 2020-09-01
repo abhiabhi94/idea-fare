@@ -1,4 +1,4 @@
-from .base import *
+from .base import * # noqa
 
 DEBUG = False
 ALLOWED_HOSTS = ['mysite.com', 'my.web.site.ip.', 'www.mysite.com', ]
@@ -21,7 +21,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-########### Integrating sentry sdk inside django #########
+# Integrating sentry sdk inside django #########
 
 # import sentry_sdk
 # from sentry_sdk.integrations.django import DjangoIntegration

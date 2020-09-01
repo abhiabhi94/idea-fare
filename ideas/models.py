@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager
 from urlextract import URLExtract
 
-from flag.models import FlaggedContent
+from flag.models import Flag
 from ideas.manager import IdeaManager
 
 MAX_TITLE_LENGTH = 60
@@ -21,6 +21,7 @@ LENGTH_OF_RANDOM_ALPHANUMERIC_SLUG = 4
 
 User = get_user_model()
 AnonymousUser.username = 'anonymous'
+
 
 class Idea(models.Model):
     # allow anonymous posting
@@ -35,7 +36,7 @@ class Idea(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(default='', max_length=MAX_SLUG_LENGTH)
     visibility = models.BooleanField(verbose_name=_('public'), default=True)
-    flag = GenericRelation(FlaggedContent, related_query_name='idea_flagged')
+    flag = GenericRelation(Flag, related_query_name='idea_flagged')
 
     objects = models.Manager()
     public_objects = IdeaManager()

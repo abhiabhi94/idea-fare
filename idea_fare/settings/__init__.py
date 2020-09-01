@@ -1,8 +1,8 @@
-import json
+# flake8: noqa
 import os
 import sys
 
-from config.config import *  # nopep8
+from config.config import *
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
@@ -14,7 +14,7 @@ else:  # development
 
 SECRET_KEY = secret_key
 
-##### For MySQL use this ########################
+# For MySQL use this ########################
 
 # DB_CONFIG_FILE = '/etc/db.cnf'
 # DATABASES = {
@@ -28,7 +28,7 @@ SECRET_KEY = secret_key
 
 ########################################################
 
-##### For sqlite you use this ###############
+# For sqlite, use this ###############
 
 DATABASES = {
     'default': {

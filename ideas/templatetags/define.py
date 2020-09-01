@@ -8,7 +8,7 @@ def define(val=None):
     """
     Define a "define" tag to be used for assigning values inside a template
 
-    Usage:  
+    Usage:
         {% load define %}
 
         {% define "something" as var %} -> This will store the value "something" within the\

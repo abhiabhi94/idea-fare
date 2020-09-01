@@ -1,12 +1,13 @@
 from django.contrib import admin
 
-from flag.models import FlaggedContent, FlagInstance
+from flag.models import Flag, FlagInstance
 
 
 class InlineFlagInstance(admin.TabularInline):
     model = FlagInstance
     extra = 0
-    readonly_fields = ['flagged_content', 'user', 'date_flagged', 'reason', 'comment']
+    readonly_fields = ['flag', 'user', 'date_flagged', 'reason', 'info']
+
 
 class FlaggedContentAdmin(admin.ModelAdmin):
     list_display = ['content_object', 'creator', 'state', 'moderator', 'count']
@@ -15,4 +16,5 @@ class FlaggedContentAdmin(admin.ModelAdmin):
     search_fields = ['content_object']
     inlines = [InlineFlagInstance]
 
-admin.site.register(FlaggedContent, FlaggedContentAdmin)
+
+admin.site.register(Flag, FlaggedContentAdmin)

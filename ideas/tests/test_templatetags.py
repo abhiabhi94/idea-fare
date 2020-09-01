@@ -6,7 +6,6 @@ from django.utils import timezone
 
 from ideas.templatetags.cool_num import cool_num
 from ideas.templatetags.cool_timesince import cool_timesince
-from ideas.templatetags.define import define
 from tests.base import TestBase
 
 
@@ -77,5 +76,8 @@ class TestTemplateTags(TestBase):
 
         # test months
         del_month = 2
-        request = now.replace(month=month-2)
-        self.compare_strs(cool_timesince(request), f'{2} months ago')
+        try:
+            request = now.replace(month=month-del_month)
+        except ValueError:  # happens when day is 31, previous months might not have that day
+            request = now.replace(month=month-del_month, day=28)
+        self.compare_strs(cool_timesince(request), f'{del_month} months ago')

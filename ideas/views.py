@@ -5,12 +5,12 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.syndication.views import Feed
 from django.core.exceptions import PermissionDenied
-from django.db.utils import IntegrityError
 from django.http import Http404
 from django.http.response import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from meta.views import Meta
@@ -20,7 +20,7 @@ from ideas.forms import AnonymousIdeaCreateForm, NonAnonymousIdeaCreateForm
 from ideas.models import Idea
 from ideas.utils import process_idea_form
 from subscribers.models import Subscriber
-from utils.validators import email_verification
+from utils import validators
 
 global paginate_by
 paginate_by = 15
@@ -43,31 +43,30 @@ def subscribe(request):
     data = {'msg': '', 'email': '', 'status': -1}
     if request.method == 'POST' and request.is_ajax():
         email = request.POST.get('email', None)
-        if email is not None:
+        if email:
             data['email'] = email
-            if email_verification(email):
-                try:
-                    Subscriber.objects.create(email=email)
-                    data['msg'] = ' is now registered successfully with us'
+            if validators.is_email_valid(email):
+                __, created = Subscriber.objects.get_or_create(email=email)
+                if created:
+                    data['msg'] = _(' is now registered successfully with us')
                     data['status'] = 0
-                except IntegrityError:
-                    data['msg'] = ' is already registered with us'
-                except:
-                    data['status'] = 1
-                    data['msg'] = 'There seems to be an issue on our side. Please retry.'
+                else:
+                    data['msg'] = _(' is already registered with us')
+
                 return JsonResponse(data)
 
-            data['msg'] = ' is not a valid email'
+            data['msg'] = _(' is not a valid email')
             return JsonResponse(data)
-    return HttpResponseBadRequest('Bad Request! email not present')
+        return HttpResponseBadRequest(_('Bad Request! email not present'))
+    return HttpResponseBadRequest(_('Bad Request!'))
 
 
 @require_http_methods(['GET'])
 def about(request):
     """Returns information about the concept of IdeaFare"""
     context = {}
-    context['meta'] = Meta(title=f'About | IdeaFare',
-                           description=f'Know a bit about the concept and the idea behind the IdeaFare',
+    context['meta'] = Meta(title='About | IdeaFare',
+                           description='Know a bit about the concept and the idea behind the IdeaFare',
                            keywords=meta_home.keywords + ['about'])
     template_name = 'ideas/about.html'
     return render(request, template_name, context)
@@ -77,8 +76,8 @@ def about(request):
 def content_policy(request):
     """Returns information about the content policy of IdeaFare"""
     context = {}
-    context['meta'] = Meta(title=f'Content Policy | IdeaFare',
-                           description=f'Content Policy for adding content on IdeaFare',
+    context['meta'] = Meta(title='Content Policy | IdeaFare',
+                           description='Content Policy for adding content on IdeaFare',
                            keywords=meta_home.keywords + ['content policy'])
     template_name = 'ideas/content_policy.html'
     return render(request, template_name, context)
@@ -88,8 +87,8 @@ def content_policy(request):
 def privacy_policy(request):
     """Returns information about the privacy policy of IdeaFare"""
     context = {}
-    context['meta'] = Meta(title=f'Privacy Policy | IdeaFare',
-                           description=f'Privacy Policy by IdeaFare',
+    context['meta'] = Meta(title='Privacy Policy | IdeaFare',
+                           description='Privacy Policy by IdeaFare',
                            keywords=meta_home.keywords + ['privacy policy'])
     template_name = 'ideas/privacy_policy.html'
     return render(request, template_name, context)
@@ -142,7 +141,7 @@ class IdeaDetailView(UserPassesTestMixin, DetailView):
         if not idea.visibility:
             if self.request.user == idea.conceiver:
                 return True
-            return PermissionDenied('You are not authorised to view this idea.')
+            return PermissionDenied(_('You are not authorised to view this idea.'))
         return True
 
 
@@ -158,10 +157,10 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == idea.conceiver:
             form = process_idea_form(self.request, form)
             messages.success(
-                self.request, 'Your idea has been successfully updated.')
+                self.request, _('Your idea has been successfully updated.'))
         else:
             messages.warning(
-                self.request, 'You are not allowed to update this idea.')
+                self.request, _('You are not allowed to update this idea.'))
             return redirect('idea:home')
 
         return super().form_valid(form)
@@ -171,10 +170,10 @@ class IdeaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         idea = self.get_object()
         if idea.user is None:
             raise PermissionDenied(
-                'Idea by anonymous user can not be edited or deleted.')
+                _('Idea by anonymous user can not be edited or deleted.'))
         if self.request.user == idea.conceiver:
             return True
-        raise PermissionDenied('You are not allowed to update this request')
+        raise PermissionDenied(_('You are not allowed to update this request'))
 
 
 @method_decorator(require_http_methods(['GET', 'POST', 'DELETE']), name='dispatch')
@@ -183,7 +182,7 @@ class IdeaDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
     model = Idea
     context_object_name = 'idea'
     success_url = reverse_lazy('ideas:home')
-    success_message = 'Idea {} was removed successfully'
+    success_message = _('Idea {} was removed successfully')
 
     def test_func(self):
         """ensuring the conceiver themselves is deleting their idea"""
@@ -263,11 +262,12 @@ class TaggedIdeaListView(ListView):
         context = super().get_context_data(**kwargs)
         slug = self.kwargs.get('slug').lower()
         tag = get_object_or_404(Tag, slug=slug).name
-        context['meta'] = Meta(title=f'About | IdeaFare',
+        context['meta'] = Meta(title='About | IdeaFare',
                                description=f'Ideas with the tag {tag}',
                                keywords=meta_home.keywords + [tag])
         context['tag'] = tag
         return context
+
 
 @method_decorator(require_http_methods(['GET']), name='dispatch')
 class TagsAutoComplete(autocomplete.Select2QuerySetView):
@@ -280,9 +280,10 @@ class TagsAutoComplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__icontains=self.q)
         return qs.order_by('name')
 
+
 class LatestIdeaRSSFeed(Feed):
     """"Publish the RSS feed for latest public ideas"""
-    title = 'Latest ideas from IdeaFare'
+    title = _('Latest ideas from IdeaFare')
     link = ''
     description = meta_home.description
 

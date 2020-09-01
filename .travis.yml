@@ -6,7 +6,9 @@ env:
 install:
     - python -m pip install --upgrade pip
     - pip install -r requirements.txt
+    - pip install flake8
 script:
+    - flake8
     - python manage.py makemigrations
     - pip install coverage
     - python manage.py test

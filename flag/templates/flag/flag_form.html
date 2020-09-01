@@ -1,26 +1,25 @@
 {% load i18n %}
-{% load static %}
 <div class="report-modal-form-combined">
-  <button
-    id="flag-report-button-{{ content_type  }}-{{ object_id }}"
-    class="btn btn-sm flag-report-button">
-    <i
-      title="Report this content"
-      class="fa fa-flag"
-      aria-hidden="true"></i>
-  </button>
+  <div class="flag-report-icon"
+    data-url="{% url 'flag:flag' %}"
+    data-app-name="{{ app_name }}"
+    data-model-name="{{ model_name }}"
+    data-model-id="{{ model_id }}"
+    data-csrf="{{ csrf_token }}">
+    <span
+      title="{% if has_flagged %}{% trans "Remove flag" %}{% else %}{% trans "Report content" %}{% endif %}">
+        {% block flag_icon %}
+        {% include "flag/flag_icon.html" %}
+        {% endblock flag_icon %}
+    </span>
+  </div>
   <div
-    id="report-modal-{{ content_type  }}-{{ object_id }}"
     class="flag-report-modal">
     <div class="report-modal-content">
       <span
-        id="report-modal-close-{{ content_type  }}-{{ object_id }}"
         class="report-modal-close">&times;</span>
-      <div class="report-modal-form">
+      <div class="report-modal-flag-form">
         <form
-          method="POST"
-          action="{% url 'flag:flag' %}"
-          id="report-modal-form-{{ content_type  }}-{{ object_id }}"
           class="m-2 p-1 report-modal-form">
           <legend>{% trans "Report this content" %}</legend>
             {% csrf_token %}
@@ -34,7 +33,6 @@
                   <label for="{{ reason.reason }}">{{ reason.reason }}</label><br>
                   {% if forloop.last %}
                     <p
-                      id="last-flag-reason-{{ content_type  }}-{{ object_id }}"
                       class="last-flag-reason"
                       style="visibility:hidden;">{{ reason.value }}</p>
                   {% endif %}
@@ -43,31 +41,14 @@
                 <tr>
                   <td>
                     <textarea
-                      id="report-modal-form-comment-{{ content_type  }}-{{ object_id }}"
-                      class="report-modal-form-comment"
+                      class="report-modal-form-info"
                       rows="10"
                       cols="40"
-                      name="comment"></textarea>
+                      name="info"></textarea>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input
-                      type="hidden"
-                      name="object_id"
-                      value="{{ object_id }}"/>
-                    <input
-                      type="hidden"
-                      name="content_type"
-                      value="{{ content_type }}"/>
-                    <input
-                      type="hidden"
-                      name="creator_field"
-                      value="{{ creator_field }}"/>
-                    <input
-                      type="hidden"
-                      name="next_link"
-                      value="{{ request.path }}"/>
                     <input
                       type="submit"
                       class="btn btn-sm btn-danger mt-2"
@@ -76,7 +57,6 @@
                 </tr>
             </table>
         </form>
-      </div>
     </div>
   </div>
 </div>

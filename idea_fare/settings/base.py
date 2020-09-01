@@ -1,9 +1,9 @@
-import json
 import os
 import sys
 
-from config.config import (email_host_pass, email_host_user, project_name, recaptcha_private_key,  # nopep8
-                         recaptcha_public_key)
+from config.config import (
+    email_host_pass, email_host_user, project_name, recaptcha_private_key,
+    recaptcha_public_key)
 
 # Just a hack to find wayaround relative imports
 sys.path.append('...')
@@ -118,7 +118,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # for using the sites framework
 SITE_ID = 1
 
-############## Used by Django-Meta app for rendering meta tags #############
+# Used by Django-Meta app for rendering meta tags #############
 META_SITE_DOMAIN = ''
 META_SITE_PROTOCOL = 'http'
 ################################################################
@@ -128,12 +128,12 @@ if email_host_user is not None:
     EMAIL_HOST_USER = email_host_user
     EMAIL_HOST_PASSWORD = email_host_pass
 
-################ Django-taggit############################
+# Django-taggit############################
 TAGGIT_CASE_INSENSITIVE = True
 
 ##############################################################################
 
-################ Django-recaptcha3############################
+# Django-recaptcha3############################
 RECAPTCHA_PRIVATE_KEY = recaptcha_private_key
 RECAPTCHA_PUBLIC_KEY = recaptcha_public_key
 RECAPTCHA_DEFAULT_ACTION = 'generic'

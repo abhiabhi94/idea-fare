@@ -1,7 +1,7 @@
 import os
 import random
-from string import ascii_lowercase
 import sys
+from string import ascii_lowercase
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -10,9 +10,10 @@ from ideas.models import Idea
 
 User = get_user_model()
 
+
 class TestBase(TestCase):
 
-    def get_unique_email(self):
+    def get_unique_email(self) -> str:
         """
         Get a valid email
 
@@ -29,12 +30,13 @@ class TestBase(TestCase):
         random_string = ''.join(random.choice(letters) for i in range(5))
         return f'{email_username}+{random_string}@{domain}'
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set the environment variable to disable RECAPTCHA"""
+        super().setUp()
         os.environ['RECAPTCHA_DISABLE'] = 'True'
 
     @staticmethod
-    def get_email():
+    def get_email() -> str:
         """
         Get email set as an environment variable
 

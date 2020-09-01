@@ -42,8 +42,8 @@ def register(request):
     else:  # On GET request return a new form
         context['form'] = UserRegisterForm()
 
-    context['meta'] = Meta(title=f'Register | IdeaFare',
-                           description=f'Register on IdeaFare',
+    context['meta'] = Meta(title='Register | IdeaFare',
+                           description='Register on IdeaFare',
                            keywords=meta_home.keywords + ['register'])
     return render(request, template_name, context=context)
 
@@ -57,7 +57,7 @@ def profile(request):
         form = UserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Your profile has been updated!')
+            messages.success(request, 'Your profile has been updated!')
             # return redirect('profile')
     else:
         form = UserUpdateForm(instance=request.user)
@@ -65,7 +65,7 @@ def profile(request):
     context = {
         'form': form
     }
-    context['meta'] = Meta(title=f'Profile | IdeaFrame',
+    context['meta'] = Meta(title='Profile | IdeaFrame',
                            description=f'Profile of {request.user.get_full_name().title()} on IdeaFrame',
                            )
     return render(request, template_name, context=context)
@@ -90,8 +90,9 @@ def password_change(request):
     context = {
         'form': form
     }
-    context['meta'] = Meta(title=f'Change Password | IdeaFrame',
-                           description=f"""Password change for {request.user.get_full_name().title()}
-                            on IdeaFrame""",
+    context['meta'] = Meta(title='Change Password | IdeaFrame',
+                           description=(
+                            f'Password change for {request.user.get_full_name().title()}'
+                            'on IdeaFrame'),
                            )
     return render(request, template_name, context=context)

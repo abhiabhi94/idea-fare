@@ -18,6 +18,7 @@ def dec_patterns(patterns):
         decorated_patterns.append(pattern)
     return decorated_patterns
 
+
 urlpatterns = [
     path('admin/', (dec_patterns(admin.site.urls[0]),) + admin.site.urls[1:]),
 ]
@@ -56,7 +57,7 @@ urlpatterns += [
              template_name='users/password_reset_complete.html'),
          name='password_reset_complete'
          ),
-    path('flag', include('flag.urls'))
+    path('flag/', include('flag.urls'))
 ]
 
 if settings.DEBUG:

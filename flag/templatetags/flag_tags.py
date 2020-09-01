@@ -1,30 +1,38 @@
 from django import template
-from django.contrib.contenttypes.models import ContentType
 
 from flag.models import FlagInstance
 
 register = template.Library()
 
 
-@register.inclusion_tag("flag/flag_form.html", takes_context=True)
-def render_flag_form(context, content_object, creator_field):
+def get_app_name(obj):
+    return type(obj)._meta.app_label
+
+
+def get_model_name(obj):
+    return type(obj).__name__
+
+
+def has_flagged(user, obj):
+    if user.is_authenticated:
+        return FlagInstance.objects.has_flagged(user, obj)
+
+    return False
+
+
+@register.inclusion_tag('flag/flag_form.html')
+def render_flag_form(obj, user):
     """
     A template tag used for adding flag form in templates
 
-    To render the flag form for a idea model with creator field as 'conceiver'
+    To render the flag form for a idea model inside the app ideas'
 
-    Usage: `{% render_flag_form for ideas 'conceiver' %}`
+    Usage: `{% render_flag_form for idea user %}`
     """
-    content_type = ContentType.objects.get(
-        app_label=content_object._meta.app_label,
-        model=content_object._meta.model_name
-    )
-    request = context["request"]
     return {
-        "content_type": content_type.id,
-        "object_id": content_object.id,
-        "creator_field": creator_field,
-        "request": request,
-        "user": request.user,
-        "flag_reasons": FlagInstance.reasons
+        'app_name': get_app_name(obj),
+        'model_name': get_model_name(obj),
+        'model_id': obj.id,
+        'has_flagged': has_flagged(user, obj),
+        'flag_reasons': FlagInstance.reasons
     }

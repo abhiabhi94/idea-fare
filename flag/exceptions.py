@@ -1,5 +1,4 @@
 """Application wide exceptions"""
-
 from django.conf import settings
 from django.http import HttpResponseBadRequest
 from django.template.loader import render_to_string
@@ -17,5 +16,7 @@ class FlagBadRequest(HttpResponseBadRequest):
 
     def __init__(self, why):
         super().__init__()
+        _why = _(why)
         if settings.DEBUG:
-            self.content = render_to_string("flag/400-debug.html", {"why": _(why)})
+            self.content = render_to_string("flag/400-debug.html", {"why": _why})
+        self.content = HttpResponseBadRequest(_why)

@@ -2,5 +2,16 @@
 branch = True
 include =
     ./idea_fare/*
+    ./ideas/*
+    ./flag/*
+    ./users/*
+    ./subscribers/*
+    ./utils/*
 omit =
     ./idea_fare/tests/*
+    ./idea_fare/settings/*
+    ./ideas/tests/*
+    ./flag/tests/*
+    ./users/tests/*
+    ./subscribers/tests/*
+    ./utils/tests/*

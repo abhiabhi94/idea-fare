@@ -14,4 +14,5 @@ class IdeaAdmin(admin.ModelAdmin):
     def get_queryset(self, *args, **kwargs):
         return Idea.public_objects.all()
 
+
 admin.site.register(Idea, IdeaAdmin)

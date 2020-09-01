@@ -3,15 +3,21 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
-from utils.validators import email_verification
+from utils import validators
 
 
 class CleanUserDetailsMixin:
     """A mixin to clean the fields used for user registration"""
 
     def clean_username(self):
-        """Return username in lower case"""
-        return self.cleaned_data.get('username').lower()
+        """Return username in lower case, invalidates `anonymous` as username"""
+        username = self.cleaned_data.get('username').lower()
+        if username == 'anonymous':
+            raise forms.ValidationError(
+                _('This username is already taken'),
+                code='invalid',
+                params={'username': username})
+        return username
 
     def clean_email(self):
         """
@@ -20,7 +26,7 @@ class CleanUserDetailsMixin:
             error message in case it isn't.
         """
         email = self.cleaned_data.get('email').lower()
-        if not email_verification(email):
+        if not validators.is_email_valid(email):
             raise forms.ValidationError(
                 _('Are you sure %(email)s is a valid email address? We suspect you made a typing error'),
                 code='invalid',
