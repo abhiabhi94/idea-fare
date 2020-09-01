@@ -33,3 +33,12 @@ repos:
         types: [python]
         pass_filenames: false
         require_serial: true
+
+    hooks:
+    -   id: pre-commit-django-tests
+        name: Testing django tests
+        entry: python manage.py test
+        language: system
+        types: [python]
+        pass_filenames: false
+        require_serial: true
