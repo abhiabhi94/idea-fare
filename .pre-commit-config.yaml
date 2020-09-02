@@ -16,6 +16,9 @@ repos:
     -   id: end-of-file-fixer
         name: fix end of files.
         description: Ensures that a file is either empty, or ends with one newline.
+    -   id: debug-statements
+        name: check for python debug statements
+        description: Check for debugger imports and py37+ `breakpoint()` calls in python source.
 
 
 -   repo: https://gitlab.com/pycqa/flake8
